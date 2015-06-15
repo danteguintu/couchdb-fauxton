@@ -15,6 +15,7 @@ app/addons/*
 !app/addons/fauxton
 !app/addons/databases
 !app/addons/documents
+!app/addons/dataimporter
 !app/addons/styletests
 !app/addons/cors
 settings.json*
