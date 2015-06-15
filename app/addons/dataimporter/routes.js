@@ -11,36 +11,37 @@
 // the License.
 
 define([
-  "app",
-  "api",
-  "addons/dataimporter/resources"
+  'app',
+  'api',
+  'addons/dataimporter/components.react'
 ],
 
-function (app, FauxtonAPI, Resources) {
+function (app, FauxtonAPI, DataImporterComponents) {
 
-  var DataImporterRoutObject = FauxtonAPI.RouteObject.extend({
+  var DataImporterRouteObject = FauxtonAPI.RouteObject.extend({
+    selectedHeader: 'Data Importer',
+    disableLoader: true,
     layout : 'one_pane',
-
     crumbs: [
-      {"name": "Data Importer", "link": "/dataimporter"}
+      {'name': 'Data Importer', 'link': '/dataimporter'}
     ],
 
     routes: {
-      "dataimporter": "dataimporter"
+      'dataimporter': 'dataimporter'
     },
 
-    selectedHeader: "Data Importer",
-
     initialize: function () {
-      console.log("dataimporter");
+      console.log("init");
     },
 
     dataimporter: function () {
-      console.log("dataimporter");
+      console.log('dataimporter');
+      this.removeView('#dashboard');
+      this.newSection = this.setComponent('#dashboard-content', DataImporterComponents.DataImporterController);
     }
   });
 
-  Resources.RouteObjects = [DataImporterRoutObject];
+  DataImporterRouteObject.RouteObjects = [DataImporterRouteObject];
 
-  return Resources;
+  return DataImporterRouteObject;
 });
