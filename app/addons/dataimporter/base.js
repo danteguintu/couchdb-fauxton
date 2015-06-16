@@ -19,9 +19,9 @@ function (app, FauxtonAPI) {
 
   DataImporter.initialize = function () {
     FauxtonAPI.addHeaderLink({
-      href:"#/dataimporter",
-      title:"Data Importer",
-      icon: "icon-download-alt"
+      href:'#/dataimporter',
+      title:'Data Importer',
+      icon: 'icon-download-alt'
     });
   };
 
