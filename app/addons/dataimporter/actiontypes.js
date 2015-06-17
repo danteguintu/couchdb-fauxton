@@ -9,18 +9,8 @@
 // WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 // License for the specific language governing permissions and limitations under
 // the License.
-
-define([
-  'app',
-  'api',
-  'addons/dataimporter/routes'
-],
-
-function (app, FauxtonAPI, DataImporter) {
-
-  DataImporter.initialize = function () {
-    FauxtonAPI.addHeaderLink({title: 'Data Importer', icon: 'icon-download-alt', href: '#/dataimporter'});
+define([], function () {
+  return {
+    DATA_IMPORTER_INIT: 'DATA_IMPORTER_INIT'
   };
-
-  return DataImporter;
 });

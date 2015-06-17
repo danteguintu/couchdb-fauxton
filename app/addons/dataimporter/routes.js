@@ -13,7 +13,8 @@
 define([
   'app',
   'api',
-  'addons/dataimporter/components.react'
+  'addons/dataimporter/components.react',
+  'addons/dataimporter/actions'
 ],
 
 function (app, FauxtonAPI, DataImporterComponents) {
@@ -30,13 +31,10 @@ function (app, FauxtonAPI, DataImporterComponents) {
       'dataimporter': 'dataimporter'
     },
 
-    initialize: function () {
-      console.log("init");
-    },
+    initialize: function () {},
 
     dataimporter: function () {
       console.log('dataimporter');
-      this.removeView('#dashboard');
       this.newSection = this.setComponent('#dashboard-content', DataImporterComponents.DataImporterController);
     }
   });

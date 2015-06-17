@@ -13,15 +13,46 @@
 define([
   'api',
   'react',
+  'papaparse',
   'addons/dataimporter/stores',
   'addons/dataimporter/actions'
-], function (FauxtonAPI, React, Stores, Actions) {
+], function (FauxtonAPI, React, Papa, Stores, Actions) {
   var dataImporterStore = Stores.dataImporterStore;
 
   var DataImporterController = React.createClass({
 
+    dragOver: function (e) {
+      e.preventDefault();
+    },
+
+    drop: function (e) {
+
+      e.preventDefault();
+
+      var data;
+      Papa.parse(file, this.config);
+
+      // try {
+      //   //data = JSON.parse(event.dataTransfer.getData('text'));
+      //   console.log("try");
+      // } catch (e) {
+      //   // If the text data isn't parsable we'll just ignore it.
+      //   console.log("text data isn't parsable");
+      //   return;
+      // }
+
+      // Do something with the data
+
+      data = JSON.parse(e.dataTransfer.getData('text'));
+      console.log(data);
+    },
+
     render: function () {
-      return <div>Data Import Time!</div>;
+      return (
+        <div id="thing" onDragOver={this.dragOver} onDrop={this.drop}>
+          Drop
+        </div>
+      );
     }
   });
 
