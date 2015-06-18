@@ -13,7 +13,7 @@
 define([
   'api',
   'react',
-  'papaparse',
+  'assets/js/libs/papaparse',
   'addons/dataimporter/stores',
   'addons/dataimporter/actions'
 ], function (FauxtonAPI, React, Papa, Stores, Actions) {
@@ -26,25 +26,33 @@ define([
     },
 
     drop: function (e) {
-
       e.preventDefault();
 
-      var data;
-      Papa.parse(file, this.config);
-
-      // try {
-      //   //data = JSON.parse(event.dataTransfer.getData('text'));
-      //   console.log("try");
-      // } catch (e) {
-      //   // If the text data isn't parsable we'll just ignore it.
-      //   console.log("text data isn't parsable");
-      //   return;
-      // }
-
-      // Do something with the data
-
-      data = JSON.parse(e.dataTransfer.getData('text'));
-      console.log(data);
+      console.log(e.nativeEvent.dataTransfer.files[0]);
+      var results = Papa.parse(e.nativeEvent.dataTransfer.files[0], {config: {
+        delimiter : "",  // auto-detect
+        newline: "",  // auto-detect
+        header: false,
+        dynamicTyping: false,
+        preview: 0,
+        encoding: "",
+        worker: false,
+        comments: false,
+        step: function (row) {
+          console.log("Row:", row.data);
+        },
+        complete: function () {
+          console.log("All done!");
+        },
+        error: undefined,
+        download: false,
+        skipEmptyLines: false,
+        chunk: undefined,
+        fastMode: undefined,
+        beforeFirstChunk: undefined,
+      }});
+      console.log('results');
+      console.log(results);
     },
 
     render: function () {
@@ -55,6 +63,8 @@ define([
       );
     }
   });
+
+
 
   return {
     DataImporterController: DataImporterController
