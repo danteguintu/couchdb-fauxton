@@ -13,7 +13,7 @@
 define([
   'api',
   'react',
-  'assets/js/libs/papaparse',
+  'assets/js/libs/papaparse.min',
   'addons/dataimporter/stores',
   'addons/dataimporter/actions'
 ], function (FauxtonAPI, React, Papa, Stores, Actions) {
@@ -27,9 +27,10 @@ define([
 
     drop: function (e) {
       e.preventDefault();
+      console.log("dropped", Papa);
 
-      console.log(e.nativeEvent.dataTransfer.files[0]);
-      var results = Papa.parse(e.nativeEvent.dataTransfer.files[0], {config: {
+      var file = e.nativeEvent.dataTransfer.files[0];
+      var results = Papa.parse(file, {
         delimiter : "",  // auto-detect
         newline: "",  // auto-detect
         header: false,
@@ -41,8 +42,10 @@ define([
         step: function (row) {
           console.log("Row:", row.data);
         },
-        complete: function () {
+        complete: function (results, file) {
           console.log("All done!");
+          console.log('results:', file);
+          console.log(results);
         },
         error: undefined,
         download: false,
@@ -50,9 +53,8 @@ define([
         chunk: undefined,
         fastMode: undefined,
         beforeFirstChunk: undefined,
-      }});
-      console.log('results');
-      console.log(results);
+      });
+
     },
 
     render: function () {
