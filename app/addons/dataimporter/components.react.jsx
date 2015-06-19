@@ -20,7 +20,17 @@ define([
   var dataImporterStore = Stores.dataImporterStore;
 
   var DataImporterController = React.createClass({
+    hasData: true,
+    render: function () {
+      if (this.hasData) {
+        return <DataImporterDropZone />;
+      } else {
+        return <DataImporterPreviewLoad />;
+      }
+    }
+  });
 
+  var DataImporterDropZone = React.createClass({
     dragOver: function (e) {
       e.preventDefault();
     },
@@ -60,15 +70,24 @@ define([
     render: function () {
       return (
         <div id="thing" onDragOver={this.dragOver} onDrop={this.drop}>
-          Drop
+          Drop Zone 
         </div>
       );
+    }
+
+  });
+
+  var DataImporterPreviewLoad = React.createClass({
+    render: function () {
+      return null;
     }
   });
 
 
 
   return {
-    DataImporterController: DataImporterController
+    DataImporterController: DataImporterController,
+    DataImporterDropZone: DataImporterDropZone,
+    DataImporterPreview: DataImporterPreviewLoad
   };
 });

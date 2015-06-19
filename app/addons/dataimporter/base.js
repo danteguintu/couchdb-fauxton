@@ -19,7 +19,7 @@ define([
 function (app, FauxtonAPI, DataImporter) {
 
   DataImporter.initialize = function () {
-    FauxtonAPI.addHeaderLink({title: 'Data Importer', icon: 'icon-download-alt', href: '#/dataimporter'});
+    FauxtonAPI.addHeaderLink({title: 'Import Data', icon: 'icon-download-alt', href: '#/dataimporter'});
   };
 
   return DataImporter;

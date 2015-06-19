@@ -20,21 +20,18 @@ define([
 function (app, FauxtonAPI, DataImporterComponents) {
 
   var DataImporterRouteObject = FauxtonAPI.RouteObject.extend({
-    selectedHeader: 'Data Importer',
+    selectedHeader: 'Import Data',
     disableLoader: true,
     layout : 'one_pane',
     crumbs: [
-      {'name': 'Data Importer', 'link': '/dataimporter'}
+      {'name': 'Import Data', 'link': '/dataimporter'}
     ],
 
     routes: {
       'dataimporter': 'dataimporter'
     },
 
-    initialize: function () {},
-
     dataimporter: function () {
-      console.log('dataimporter');
       this.newSection = this.setComponent('#dashboard-content', DataImporterComponents.DataImporterController);
     }
   });
