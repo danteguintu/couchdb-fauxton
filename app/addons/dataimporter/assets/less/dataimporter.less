@@ -10,8 +10,15 @@
 //  License for the specific language governing permissions and limitations under
 //  the License.
 
-#thing {
-	border: 2px solid gray;
-	height: calc(100% ~"-" 114px);
-	margin: 50px;
+.thing {
+  border: 2px solid gray;
+  height: calc(100% ~"-" 114px);
+  margin: 50px;
+  
+  &.red-background {
+    border: 10px solid yellow;
+    background-color: #e33f3b;
+    opacity: 50%;
+  }
 }
+

@@ -31,12 +31,23 @@ define([
   });
 
   var DataImporterDropZone = React.createClass({
+    getInitialState: function () {
+      return { red: true };
+    },
+
     dragOver: function (e) {
       e.preventDefault();
+      console.log("dragOver");
+      this.setState({ red: true });
+    },
+
+    endDragover: function (e) {
+      this.setState({red: false});
     },
 
     drop: function (e) {
       e.preventDefault();
+      this.setState({ red: false });
       console.log("dropped", Papa);
 
       var file = e.nativeEvent.dataTransfer.files[0];
@@ -67,8 +78,13 @@ define([
     },
 
     render: function () {
+      var red = this.state.red ? "red-background" : "";
+
       return (
-        <div id="thing" onDragOver={this.dragOver} onDrop={this.drop}>
+        <div className={red + " thing"} 
+          onDragOver={this.dragOver} 
+          onDragLeave={this.endDragover} 
+          onDrop={this.drop}>
           Drop Zone 
         </div>
       );
