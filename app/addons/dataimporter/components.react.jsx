@@ -20,12 +20,12 @@ define([
   var dataImporterStore = Stores.dataImporterStore;
 
   var DataImporterController = React.createClass({
-    hasData: true,
+    hasData: false,
     render: function () {
       if (this.hasData) {
-        return <DataImporterDropZone />;
-      } else {
         return <DataImporterPreviewLoad />;
+      } else {
+        return <DataImporterDropZone />;
       }
     }
   });
@@ -53,9 +53,8 @@ define([
           console.log("Row:", row.data);
         },
         complete: function (results, file) {
-          console.log("All done!");
+          console.log("All done! -- add loader stopper here");
           console.log('results:', file);
-          console.log(results);
         },
         error: undefined,
         download: false,
