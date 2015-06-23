@@ -16,8 +16,25 @@ define([
 ],
 function (FauxtonAPI, ActionTypes, Resources) {
   return {
-    dataImporterInit: function (activeTasks) {
-      console.log("hello");
+    dataImporterInit: function () {
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_INIT
+      });
     },
+
+    dataLoadedComplete: function () {
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_DATA_LOAD_COMPLETE
+      });
+    },
+
+    errorInDataLoading: function () {
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_ERROR_IN_DATA_LOAD
+      });
+    }
+
   };
+
+
 });

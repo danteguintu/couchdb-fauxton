@@ -19,14 +19,45 @@ define([
   var DataImporterStore = FauxtonAPI.Store.extend({
 
     init: function () {
-      console.log("yes");
+      this._isDataCurrentlyLoading = false;
+      this._hasDataLoaded = false;
+      this._hasErrored = false;
+    },
+
+    isDataCurrentlyLoading: function () {
+      return this._isDataCurrentlyLoading;
+    },
+
+    dataIsLoading: function () {
+      this._isDataCurrentlyLoading = true;
+    },
+
+    hasDataLoaded: function () {
+      return this._hasDataLoaded;
+    },
+
+    dataLoaded: function () {
+      this._hasDataLoaded = true;
+    },
+
+    errorInDataLoading: function () {
+      this._errored = true;
     },
 
     dispatch: function (action) {
       switch (action.type) {
-
         case ActionTypes.DATA_IMPORTER_INIT:
           this.init();
+        break;
+
+        case ActionTypes.DATA_IMPORTER_DATA_LOAD_COMPLETE:
+          this.dataLoaded();
+          this.triggerChange();
+        break;
+
+        case ActionTypes.DATA_IMPORTER_ERROR_IN_DATA_LOAD:
+          this.errorInDataLoading();
+          this.triggerChange();
         break;
 
         default:
@@ -39,7 +70,7 @@ define([
   dataImporterStore.dispatchToken = FauxtonAPI.dispatcher.register(dataImporterStore.dispatch.bind(dataImporterStore));
 
   return {
-    DataImporterStore: DataImporterStore
+    dataImporterStore: dataImporterStore
   };
 
 });

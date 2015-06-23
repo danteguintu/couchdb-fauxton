@@ -20,35 +20,59 @@ define([
   var dataImporterStore = Stores.dataImporterStore;
 
   var DataImporterController = React.createClass({
-    hasData: false,
+    getStoreState: function () {
+      return {
+        isDataCurrentlyLoading: dataImporterStore.isDataCurrentlyLoading(),
+        hasDataLoaded: dataImporterStore.hasDataLoaded()
+      };
+    },
+
+    getInitialState: function () {
+      return this.getStoreState();
+    },
+
+    componentDidMount: function () {
+      dataImporterStore.on('change', this.onChange, this);
+    },
+
+    componentWillUnmount: function () {
+      dataImporterStore.off('change', this.onChange, this);
+    },
+
+    onChange: function () {
+      this.setState(this.getStoreState());
+    },
+
     render: function () {
-      if (this.hasData) {
-        return <DataImporterPreviewLoad />;
+      if (this.state.hasDataLoaded) {
+        return <DataImporterPreviewData />;
       } else {
-        return <DataImporterDropZone />;
+        return <DataImporterDropZone isLoading={this.state.isDataCurrentlyLoading} />;
       }
     }
   });
 
   var DataImporterDropZone = React.createClass({
     getInitialState: function () {
-      return { red: true };
+      return {
+        draggingOver: false,
+        loading: this.props.isLoading
+      };
     },
 
     dragOver: function (e) {
       e.preventDefault();
-      console.log("dragOver");
-      this.setState({ red: true });
+      this.setState({ draggingOver: true });
     },
 
     endDragover: function (e) {
-      this.setState({red: false});
+      this.setState({draggingOver: false});
     },
 
     drop: function (e) {
       e.preventDefault();
-      this.setState({ red: false });
-      console.log("dropped", Papa);
+      this.setState({ draggingOver: false });
+      this.setState({ loading: true });
 
       var file = e.nativeEvent.dataTransfer.files[0];
       var results = Papa.parse(file, {
@@ -66,8 +90,12 @@ define([
         complete: function (results, file) {
           console.log("All done! -- add loader stopper here");
           console.log('results:', file);
+          Actions.dataLoadedComplete();
         },
-        error: undefined,
+        error: function () {
+          console.log("error");
+          Actions.errorInDataLoading();
+        },
         download: false,
         skipEmptyLines: false,
         chunk: undefined,
@@ -78,10 +106,11 @@ define([
     },
 
     render: function () {
-      var red = this.state.red ? "red-background" : "";
+      var draggingOver = this.state.draggingOver ? 'dragging-file-in-background' : '',
+          loading = this.state.loading ? 'loading-background' : '';
 
       return (
-        <div className={red + " thing"} 
+        <div className={loading + " " + draggingOver + " dropzone"} 
           onDragOver={this.dragOver} 
           onDragLeave={this.endDragover} 
           onDrop={this.drop}>
@@ -92,9 +121,9 @@ define([
 
   });
 
-  var DataImporterPreviewLoad = React.createClass({
+  var DataImporterPreviewData= React.createClass({
     render: function () {
-      return null;
+      return <div> Preview Page </div>;
     }
   });
 
@@ -103,6 +132,6 @@ define([
   return {
     DataImporterController: DataImporterController,
     DataImporterDropZone: DataImporterDropZone,
-    DataImporterPreview: DataImporterPreviewLoad
+    DataImporterPreviewData: DataImporterPreviewData
   };
 });

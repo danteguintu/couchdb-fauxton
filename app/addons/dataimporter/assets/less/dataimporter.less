@@ -9,16 +9,22 @@
 //  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 //  License for the specific language governing permissions and limitations under
 //  the License.
+@import "../../../../../assets/less/bootstrap/variables.less";
+@import "../../../../../assets/less/variables.less";
+@import "../../../../../assets/less/bootstrap/mixins.less";
 
-.thing {
+.dropzone {
   border: 2px solid gray;
   height: calc(100% ~"-" 114px);
   margin: 50px;
   
-  &.red-background {
-    border: 10px solid yellow;
-    background-color: #e33f3b;
-    opacity: 50%;
+  &.dragging-file-in-background {
+    border: 2px solid @linkColor;
+    background-color: #F0DAD9;
+  }
+
+  &.loading-background {
+    border: 2px solid @linkColor;
   }
 }
 

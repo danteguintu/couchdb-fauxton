@@ -17,7 +17,7 @@ define([
   'addons/dataimporter/actions'
 ],
 
-function (app, FauxtonAPI, DataImporterComponents) {
+function (app, FauxtonAPI, DataImporterComponents, DataImporterActions) {
 
   var DataImporterRouteObject = FauxtonAPI.RouteObject.extend({
     selectedHeader: 'Import Data',
@@ -33,6 +33,7 @@ function (app, FauxtonAPI, DataImporterComponents) {
 
     dataimporter: function () {
       this.newSection = this.setComponent('#dashboard-content', DataImporterComponents.DataImporterController);
+      DataImporterActions.dataImporterInit();
     }
   });
 
