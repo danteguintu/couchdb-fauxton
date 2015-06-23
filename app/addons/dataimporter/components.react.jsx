@@ -17,6 +17,9 @@ define([
   'addons/dataimporter/stores',
   'addons/dataimporter/actions'
 ], function (FauxtonAPI, React, Papa, Stores, Actions) {
+
+  Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js'; //this is super important so we can use worker threads
+
   var dataImporterStore = Stores.dataImporterStore;
 
   var DataImporterController = React.createClass({
@@ -73,6 +76,7 @@ define([
       e.preventDefault();
       this.setState({ draggingOver: false });
       this.setState({ loading: true });
+      Actions.dataIsCurrentlyLoading();
 
       var file = e.nativeEvent.dataTransfer.files[0];
       var results = Papa.parse(file, {
@@ -82,10 +86,10 @@ define([
         dynamicTyping: false,
         preview: 0,
         encoding: "",
-        worker: false,
+        worker: true, //so the page doesn't lock up
         comments: false,
-        step: function (row) {
-          console.log("Row:", row.data);
+        step: function (row) {  //streaming
+          //console.log("Row:", row.data);
         },
         complete: function (results, file) {
           console.log("All done! -- add loader stopper here");
@@ -107,14 +111,22 @@ define([
 
     render: function () {
       var draggingOver = this.state.draggingOver ? 'dragging-file-in-background' : '',
-          loading = this.state.loading ? 'loading-background' : '';
+          loading = this.state.loading ? 'loading-background' : '',
+          message;
+
+
+      if (this.state.draggingOver || this.state.loading) {
+        message = this.state.draggingOver ? 'dragging-file' : 'loading...';
+      } else {
+        message = 'drag files in';
+      }
 
       return (
         <div className={loading + " " + draggingOver + " dropzone"} 
           onDragOver={this.dragOver} 
           onDragLeave={this.endDragover} 
           onDrop={this.drop}>
-          Drop Zone 
+          {message} 
         </div>
       );
     }

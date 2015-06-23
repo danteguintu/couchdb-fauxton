@@ -22,6 +22,12 @@ function (FauxtonAPI, ActionTypes, Resources) {
       });
     },
 
+    dataIsCurrentlyLoading: function () {
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_DATA_IS_CURRENTLY_LOADING
+      });
+    },
+
     dataLoadedComplete: function () {
       FauxtonAPI.dispatch({
         type: ActionTypes.DATA_IMPORTER_DATA_LOAD_COMPLETE

@@ -50,6 +50,11 @@ define([
           this.init();
         break;
 
+        case ActionTypes.DATA_IMPORTER_DATA_IS_CURRENTLY_LOADING:
+          this.dataIsLoading();
+          this.triggerChange();
+        break;
+
         case ActionTypes.DATA_IMPORTER_DATA_LOAD_COMPLETE:
           this.dataLoaded();
           this.triggerChange();
