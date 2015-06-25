@@ -16,9 +16,10 @@ define([
 ],
 function (FauxtonAPI, ActionTypes, Resources) {
   return {
-    dataImporterInit: function () {
+    dataImporterInit: function (firstTimeHere) {
       FauxtonAPI.dispatch({
-        type: ActionTypes.DATA_IMPORTER_INIT
+        type: ActionTypes.DATA_IMPORTER_INIT,
+        firstTimeHere: firstTimeHere
       });
     },
 
@@ -39,8 +40,5 @@ function (FauxtonAPI, ActionTypes, Resources) {
         type: ActionTypes.DATA_IMPORTER_ERROR_IN_DATA_LOAD
       });
     }
-
   };
-
-
 });

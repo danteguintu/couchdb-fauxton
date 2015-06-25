@@ -19,6 +19,9 @@ define([
 
 function (app, FauxtonAPI, DataImporterComponents, DataImporterActions) {
 
+  //state is in case you move away from the page and return
+  var firstTimeHere = true;
+
   var DataImporterRouteObject = FauxtonAPI.RouteObject.extend({
     selectedHeader: 'Import Data',
     disableLoader: true,
@@ -33,8 +36,9 @@ function (app, FauxtonAPI, DataImporterComponents, DataImporterActions) {
 
     dataimporter: function () {
       this.newSection = this.setComponent('#dashboard-content', DataImporterComponents.DataImporterController);
-      DataImporterActions.dataImporterInit();
-    }
+      DataImporterActions.dataImporterInit(firstTimeHere);
+      firstTimeHere = false;
+    },
   });
 
   DataImporterRouteObject.RouteObjects = [DataImporterRouteObject];

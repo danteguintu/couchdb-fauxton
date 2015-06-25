@@ -15,8 +15,9 @@ define([
   'react',
   'assets/js/libs/papaparse.min',
   'addons/dataimporter/stores',
-  'addons/dataimporter/actions'
-], function (FauxtonAPI, React, Papa, Stores, Actions) {
+  'addons/dataimporter/actions',
+    'addons/components/react-components.react'
+], function (FauxtonAPI, React, Papa, Stores, Actions, Components) {
 
   Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js'; //this is super important so we can use worker threads
 
@@ -47,6 +48,7 @@ define([
     },
 
     render: function () {
+      console.log("render controller");
       if (this.state.hasDataLoaded) {
         return <DataImporterPreviewData />;
       } else {
@@ -79,25 +81,24 @@ define([
       Actions.dataIsCurrentlyLoading();
 
       var file = e.nativeEvent.dataTransfer.files[0];
+
       var results = Papa.parse(file, {
         delimiter : "",  // auto-detect
         newline: "",  // auto-detect
-        header: false,
+        header: true,
         dynamicTyping: false,
         preview: 0,
         encoding: "",
         worker: true, //so the page doesn't lock up
         comments: false,
         step: function (row) {  //streaming
-          //console.log("Row:", row.data);
+          dataImporterStore.loadData(row.data);
         },
-        complete: function (results, file) {
-          console.log("All done! -- add loader stopper here");
-          console.log('results:', file);
+        complete: function () {
           Actions.dataLoadedComplete();
         },
         error: function () {
-          console.log("error");
+          console.log("There was an error while parsing the file.");
           Actions.errorInDataLoading();
         },
         download: false,
@@ -112,13 +113,15 @@ define([
     render: function () {
       var draggingOver = this.state.draggingOver ? 'dragging-file-in-background' : '',
           loading = this.state.loading ? 'loading-background' : '',
-          message;
+          message = 'Drag files into box.',
+          loadLines = null;
 
-
+      console.log("render box");
       if (this.state.draggingOver || this.state.loading) {
-        message = this.state.draggingOver ? 'dragging-file' : 'loading...';
-      } else {
-        message = 'drag files in';
+        message = this.state.draggingOver ? 'dragging-file' : 'Loading...';
+        if (this.state.loading) {
+          loadLines = <Components.LoadLines />;
+        }
       }
 
       return (
@@ -126,7 +129,8 @@ define([
           onDragOver={this.dragOver} 
           onDragLeave={this.endDragover} 
           onDrop={this.drop}>
-          {message} 
+          {message}
+          <div>{loadLines}</div> 
         </div>
       );
     }
@@ -134,8 +138,17 @@ define([
   });
 
   var DataImporterPreviewData= React.createClass({
+    startover: function () {
+      Actions.dataImporterInit(true);
+    },
+
     render: function () {
-      return <div> Preview Page </div>;
+      console.log("render preview");
+      return (
+        <div> Preview Page 
+          <p><a onClick={this.startover}>Start Over</a></p>
+        </div>
+        );
     }
   });
 

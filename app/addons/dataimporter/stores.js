@@ -18,10 +18,13 @@ define([
 
   var DataImporterStore = FauxtonAPI.Store.extend({
 
-    init: function () {
-      this._isDataCurrentlyLoading = false;
-      this._hasDataLoaded = false;
-      this._hasErrored = false;
+    init: function (firstTimeHere) { //to reset, call this with true
+      if (firstTimeHere) {
+        this._isDataCurrentlyLoading = false;
+        this._hasDataLoaded = false;
+        this._hasErrored = false;
+        this._thedata = {};
+      }  // else keeps store as it was when you left
     },
 
     isDataCurrentlyLoading: function () {
@@ -44,10 +47,15 @@ define([
       this._errored = true;
     },
 
+    loadData: function (data) {
+      //console.log(data);
+    },
+
     dispatch: function (action) {
       switch (action.type) {
         case ActionTypes.DATA_IMPORTER_INIT:
-          this.init();
+          this.init(action.firstTimeHere);
+          this.triggerChange();
         break;
 
         case ActionTypes.DATA_IMPORTER_DATA_IS_CURRENTLY_LOADING:
