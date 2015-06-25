@@ -23,7 +23,7 @@ define([
         this._isDataCurrentlyLoading = false;
         this._hasDataLoaded = false;
         this._hasErrored = false;
-        this._thedata = {};
+        this._thedata = [];
       }  // else keeps store as it was when you left
     },
 
@@ -48,7 +48,7 @@ define([
     },
 
     loadData: function (data) {
-      //console.log(data);
+      this._thedata.push(data);
     },
 
     dispatch: function (action) {

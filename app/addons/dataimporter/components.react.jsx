@@ -92,7 +92,7 @@ define([
         worker: true, //so the page doesn't lock up
         comments: false,
         step: function (row) {  //streaming
-          dataImporterStore.loadData(row.data);
+          dataImporterStore.loadData(row.data[0]);
         },
         complete: function () {
           Actions.dataLoadedComplete();
@@ -110,31 +110,71 @@ define([
 
     },
 
-    render: function () {
-      var draggingOver = this.state.draggingOver ? 'dragging-file-in-background' : '',
-          loading = this.state.loading ? 'loading-background' : '',
-          message = 'Drag files into box.',
-          loadLines = null;
-
-      console.log("render box");
-      if (this.state.draggingOver || this.state.loading) {
-        message = this.state.draggingOver ? 'dragging-file' : 'Loading...';
-        if (this.state.loading) {
-          loadLines = <Components.LoadLines />;
-        }
-      }
-
+    uploadButton: function () {
       return (
-        <div className={loading + " " + draggingOver + " dropzone"} 
+        <span className="fileUpload btn">
+          <span className="icon icon-search"></span>
+          Choose File
+          <input type="file" className="upload" />
+        </span>
+      );
+    },
+
+    defaultBox: function () {
+      return (
+        <div className={"dropzone"} 
           onDragOver={this.dragOver} 
           onDragLeave={this.endDragover} 
           onDrop={this.drop}>
-          {message}
-          <div>{loadLines}</div> 
+          <div className="dropzone-msg default">
+            <p>
+              <span className="fonticon icon-file-text-alt">
+              {this.uploadButton()}
+              </span>
+            </p>
+            <p>Or drag a file into box.</p>
+          </div>
+          <div className="filetype-txt">(Only .csv, .tsv, or .json files)</div>
         </div>
       );
-    }
+    },
 
+    boxIsDraggingOver: function () {
+      return (
+        <div className={"dropzone dragging-file-in-background"} 
+          onDragOver={this.dragOver} 
+          onDragLeave={this.endDragover} 
+          onDrop={this.drop}>
+          <div className="dropzone-msg draggingover">
+            <span className="fonticon icon-file-text-alt"></span>
+            Drop your file.
+          </div>
+        </div>
+      );
+    },
+
+    boxIsLoading: function () {
+      return (
+        <div className={"dropzone loading-background"}>
+          <div className="dropzone-msg loading">
+            Loading...
+            <Components.LoadLines />
+          </div>
+        </div>
+      );
+    },
+
+    render: function () {
+      var box = this.defaultBox();
+
+      if (this.state.draggingOver) {
+        box = this.boxIsDraggingOver();
+      } else if (this.state.loading) {
+        box = this.boxIsLoading();
+      }
+
+      return box;
+    }
   });
 
   var DataImporterPreviewData= React.createClass({
@@ -151,8 +191,6 @@ define([
         );
     }
   });
-
-
 
   return {
     DataImporterController: DataImporterController,

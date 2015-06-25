@@ -15,8 +15,10 @@
 
 .dropzone {
   border: 2px solid gray;
+  background-color: #E8E8E8;
   height: calc(100% ~"-" 114px);
   margin: 50px;
+  color: @darkRed;
   
   &.dragging-file-in-background {
     border: 2px solid @linkColor;
@@ -26,5 +28,58 @@
   &.loading-background {
     border: 2px solid @linkColor;
   }
-}
 
+
+  .dropzone-msg {
+    text-align: center;
+    margin-top: 25%;
+    padding-bottom: 10px;
+
+    .icon-file-text-alt {
+      font-size: 50px;
+    }
+
+    .loading-lines {
+      padding-top: 15px;
+      padding-left: 10px;
+    }
+  }
+
+  .filetype-txt {
+    position: absolute;
+    bottom: 25px;
+    text-align: center;
+    color: gray;
+    font-size: 10px !important;
+    width: 100%;
+    margin-left: -66px;
+
+  }
+
+  .fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin-left: 10px;
+    margin-bottom: 3px;
+    color: white;
+    background-color: @darkRed;
+    font-size: 13px !important;
+
+    .icon-search {
+      margin-right: 5px;
+    }
+  }
+
+  .fileUpload input.upload {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 2px;
+      margin: 0;
+      padding: 0;
+      font-size: 20px;
+      cursor: pointer;
+      opacity: 0;
+      filter: alpha(opacity=0);
+  }
+}
