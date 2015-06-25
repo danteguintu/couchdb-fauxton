@@ -60,7 +60,7 @@ define([
   var DataImporterDropZone = React.createClass({
     getInitialState: function () {
       return {
-        draggingOver: true,
+        draggingOver: false,
         loading: this.props.isLoading
       };
     },
