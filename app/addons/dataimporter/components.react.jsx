@@ -60,7 +60,7 @@ define([
   var DataImporterDropZone = React.createClass({
     getInitialState: function () {
       return {
-        draggingOver: false,
+        draggingOver: true,
         loading: this.props.isLoading
       };
     },
@@ -71,6 +71,7 @@ define([
     },
 
     endDragover: function (e) {
+      e.preventDefault();
       this.setState({draggingOver: false});
     },
 
@@ -81,7 +82,6 @@ define([
       Actions.dataIsCurrentlyLoading();
 
       var file = e.nativeEvent.dataTransfer.files[0];
-
       var results = Papa.parse(file, {
         delimiter : "",  // auto-detect
         newline: "",  // auto-detect
@@ -115,10 +115,46 @@ define([
         <span className="fileUpload btn">
           <span className="icon icon-search"></span>
           Choose File
-          <input type="file" className="upload" />
+          <input type="file" className="upload" onChange={this.filechosen}/>
         </span>
       );
     },
+
+    filechosen: function (e) {
+      e.preventDefault();
+      this.setState({ draggingOver: false });
+      this.setState({ loading: true });
+      Actions.dataIsCurrentlyLoading();
+
+      var file = e.nativeEvent.target.files[0] ;
+      console.log(file);
+      var results = Papa.parse(file, {
+        delimiter : "",  // auto-detect
+        newline: "",  // auto-detect
+        header: true,
+        dynamicTyping: false,
+        preview: 0,
+        encoding: "",
+        worker: true, //so the page doesn't lock up
+        comments: false,
+        step: function (row) {  //streaming
+          dataImporterStore.loadData(row.data[0]);
+        },
+        complete: function () {
+          Actions.dataLoadedComplete();
+        },
+        error: function () {
+          console.log("There was an error while parsing the file.");
+          Actions.errorInDataLoading();
+        },
+        download: false,
+        skipEmptyLines: false,
+        chunk: undefined,
+        fastMode: undefined,
+        beforeFirstChunk: undefined,
+      });
+    },
+
 
     defaultBox: function () {
       return (
@@ -147,7 +183,7 @@ define([
           onDrop={this.drop}>
           <div className="dropzone-msg draggingover">
             <span className="fonticon icon-file-text-alt"></span>
-            Drop your file.
+            <span className="loading-msg">Drop your file.</span>
           </div>
         </div>
       );
@@ -165,6 +201,7 @@ define([
     },
 
     render: function () {
+      console.log(this.state.draggingOver);
       var box = this.defaultBox();
 
       if (this.state.draggingOver) {

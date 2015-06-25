@@ -19,41 +19,59 @@
   height: calc(100% ~"-" 114px);
   margin: 50px;
   color: @darkRed;
+  padding-top: 0px !important;
   
   &.dragging-file-in-background {
-    border: 2px solid @linkColor;
+    border: 2px solid @darkRed;
     background-color: #F0DAD9;
+    .icon-file-text-alt {
+      padding-right: 10px;
+    }
   }
 
   &.loading-background {
-    border: 2px solid @linkColor;
+    border: 2px solid @darkRed;
+    .icon-file-text-alt {
+      padding-right: 10px;
+    }
   }
 
-
   .dropzone-msg {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
     text-align: center;
-    margin-top: 25%;
-    padding-bottom: 10px;
+    vertical-align: middle;
 
     .icon-file-text-alt {
       font-size: 50px;
     }
 
+    &.draggingover { 
+      .loading-msg {
+        position: relative;
+        top: -10px;
+      }
+    }
+    
+    
     .loading-lines {
       padding-top: 15px;
       padding-left: 10px;
+      #line1, #line2, #line3, #line4 {
+        background-color: @darkRed;
+      }
     }
   }
 
   .filetype-txt {
     position: absolute;
-    bottom: 25px;
+    bottom: 80px;
     text-align: center;
     color: gray;
-    font-size: 10px !important;
+    font-size: 12px !important;
     width: 100%;
     margin-left: -66px;
-
   }
 
   .fileUpload {
@@ -67,6 +85,10 @@
 
     .icon-search {
       margin-right: 5px;
+    }
+
+    &:hover {
+      background-color: @linkColor;
     }
   }
 
