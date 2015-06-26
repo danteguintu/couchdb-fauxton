@@ -23,8 +23,8 @@ define([
         this._isDataCurrentlyLoading = false;
         this._hasDataLoaded = false;
         this._hasErrored = false;
-        this._thedata = [];
-      }  // else keeps store as it was when you left
+        this._theData = [];
+      } // else keeps store as it was when you left
     },
 
     isDataCurrentlyLoading: function () {
@@ -48,7 +48,11 @@ define([
     },
 
     loadData: function (data) {
-      this._thedata.push(data);
+      this._theData.push(data);
+    },
+
+    getTheData: function () {
+      return this._theData;
     },
 
     dispatch: function (action) {
@@ -85,5 +89,4 @@ define([
   return {
     dataImporterStore: dataImporterStore
   };
-
 });

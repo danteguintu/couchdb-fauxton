@@ -115,7 +115,7 @@ define([
         <span className="fileUpload btn">
           <span className="icon icon-search"></span>
           Choose File
-          <input type="file" className="upload" onChange={this.filechosen}/>
+          <input type="file" className="upload" onChange={this.filechosen} />
         </span>
       );
     },
@@ -201,7 +201,6 @@ define([
     },
 
     render: function () {
-      console.log(this.state.draggingOver);
       var box = this.defaultBox();
 
       if (this.state.draggingOver) {
@@ -215,15 +214,39 @@ define([
   });
 
   var DataImporterPreviewData= React.createClass({
+    getInitialState: function () {
+      return {
+        data: dataImporterStore.getTheData()
+      };
+    },
+
+    each: function () {
+      var data = this.state.data;
+      return (
+        data.map(function (dataObj, i) {
+          console.log(dataObj);
+          return _.map(dataObj, function (dataVal, dataKey) {
+            console.log(dataVal, dataKey);
+            return (<div>{dataKey + ":" + dataVal}</div>);
+          });
+        })
+      );
+    },
+
     startover: function () {
       Actions.dataImporterInit(true);
     },
 
     render: function () {
       console.log("render preview");
+      var data = this.each();
+      console.log(data);
       return (
         <div> Preview Page 
-          <p><a onClick={this.startover}>Start Over</a></p>
+          <a onClick={this.startover}>Start Over</a>
+          <pre>
+            {data}
+          </pre>
         </div>
         );
     }
