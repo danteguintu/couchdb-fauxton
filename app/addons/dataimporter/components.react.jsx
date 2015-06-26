@@ -82,6 +82,10 @@ define([
       Actions.dataIsCurrentlyLoading();
 
       var file = e.nativeEvent.dataTransfer.files[0];
+      this.papaparse(file);
+    },
+
+    papaparse: function (file) {
       var results = Papa.parse(file, {
         delimiter : "",  // auto-detect
         newline: "",  // auto-detect
@@ -91,10 +95,17 @@ define([
         encoding: "",
         worker: true, //so the page doesn't lock up
         comments: false,
-        step: function (row) {  //streaming
-          dataImporterStore.loadData(row.data[0]);
-        },
-        complete: function () {
+        // step: function (row) {  //streaming
+        //   dataImporterStore.loadData(row.data[0]);
+        // },
+        complete: function (results) {
+          dataImporterStore.loadFile(file);
+          dataImporterStore.loadMeta(results.meta);
+          dataImporterStore.loadData(results.data);
+          if (dataImporterStore.isThisABigFile()) {
+            Actions.calcSmallPreviewOfData();
+          }
+
           Actions.dataLoadedComplete();
         },
         error: function () {
@@ -104,10 +115,9 @@ define([
         download: false,
         skipEmptyLines: false,
         chunk: undefined,
-        fastMode: undefined,
+        fastMode: true,
         beforeFirstChunk: undefined,
       });
-
     },
 
     uploadButton: function () {
@@ -125,34 +135,8 @@ define([
       this.setState({ draggingOver: false });
       this.setState({ loading: true });
       Actions.dataIsCurrentlyLoading();
-
       var file = e.nativeEvent.target.files[0] ;
-      console.log(file);
-      var results = Papa.parse(file, {
-        delimiter : "",  // auto-detect
-        newline: "",  // auto-detect
-        header: true,
-        dynamicTyping: false,
-        preview: 0,
-        encoding: "",
-        worker: true, //so the page doesn't lock up
-        comments: false,
-        step: function (row) {  //streaming
-          dataImporterStore.loadData(row.data[0]);
-        },
-        complete: function () {
-          Actions.dataLoadedComplete();
-        },
-        error: function () {
-          console.log("There was an error while parsing the file.");
-          Actions.errorInDataLoading();
-        },
-        download: false,
-        skipEmptyLines: false,
-        chunk: undefined,
-        fastMode: undefined,
-        beforeFirstChunk: undefined,
-      });
+      this.papaparse(file);
     },
 
 
@@ -216,37 +200,70 @@ define([
   var DataImporterPreviewData= React.createClass({
     getInitialState: function () {
       return {
-        data: dataImporterStore.getTheData()
+        data: dataImporterStore.getTheData(),
+        meta: dataImporterStore.getTheMetadata(),
+        isBigFile: dataImporterStore.isThisABigFile(),
+        rowShown: dataImporterStore.getRowsShown()
       };
     },
 
-    each: function () {
-      var data = this.state.data;
+    header: function () {
+      var header = this.state.meta.fields;
       return (
-        data.map(function (dataObj, i) {
-          console.log(dataObj);
-          return _.map(dataObj, function (dataVal, dataKey) {
-            console.log(dataVal, dataKey);
-            return (<div>{dataKey + ":" + dataVal}</div>);
-          });
+        header.map(function (field, i) {
+          return <td key={i}>{field}</td>;
         })
       );
+    },
+
+    eachRow: function () {
+      var data = this.state.data;
+
+      if (this.state.isBigFile) {
+        data = dataImporterStore.getSmallPreviewOfData();
+      }
+
+      return (
+        data.map(function (dataObj, i) {
+          return <tr key={i}>{this.insideEachRow(dataObj)}</tr>;
+        }.bind(this))
+      );
+    },
+
+    insideEachRow: function (dataObj) {
+      return _.map(dataObj, function (dataVal, dataKey) {
+        return <td key={dataKey}>{dataVal}</td>;
+      });
     },
 
     startover: function () {
       Actions.dataImporterInit(true);
     },
 
+    bigFilePreviewWarning: function () {
+      var rowShown = this.state.rowShown;
+      return (
+        <div>
+          Because of the size of this file, this preview only shows the first {rowShown} rows.
+          However, if you choose to load the data into a database, the entirety of the file will be imported.
+        </div>
+      );
+    },
+
     render: function () {
       console.log("render preview");
-      var data = this.each();
-      console.log(data);
+      var data = this.eachRow(),
+          header = this.header(),
+          bigFilePreview = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
+
       return (
         <div> Preview Page 
           <a onClick={this.startover}>Start Over</a>
-          <pre>
+          {bigFilePreview}
+          <table className="data-import-table">
+            <tr>{header}</tr>
             {data}
-          </pre>
+          </table>
         </div>
         );
     }

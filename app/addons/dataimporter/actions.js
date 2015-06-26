@@ -39,6 +39,12 @@ function (FauxtonAPI, ActionTypes, Resources) {
       FauxtonAPI.dispatch({
         type: ActionTypes.DATA_IMPORTER_ERROR_IN_DATA_LOAD
       });
+    },
+
+    calcSmallPreviewOfData: function () {
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_CALC_SMALL_PREVIEW_OF_DATA
+      });
     }
   };
 });
