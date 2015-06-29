@@ -16,8 +16,9 @@ define([
   'assets/js/libs/papaparse.min',
   'addons/dataimporter/stores',
   'addons/dataimporter/actions',
-    'addons/components/react-components.react'
-], function (FauxtonAPI, React, Papa, Stores, Actions, Components) {
+  'addons/components/react-components.react',
+  'addons/fauxton/components.react'
+], function (FauxtonAPI, React, Papa, Stores, Actions, Components, FauxtonComponents) {
 
   Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js'; //this is super important so we can use worker threads
 
@@ -61,7 +62,8 @@ define([
     getInitialState: function () {
       return {
         draggingOver: false,
-        loading: this.props.isLoading
+        loading: this.props.isLoading,
+        showLimitInfo: false
       };
     },
 
@@ -86,6 +88,8 @@ define([
     },
 
     papaparse: function (file) {
+
+      var loadComplete = this.loadingComplete;
       var results = Papa.parse(file, {
         delimiter : "",  // auto-detect
         newline: "",  // auto-detect
@@ -93,20 +97,10 @@ define([
         dynamicTyping: false,
         preview: 0,
         encoding: "",
-        worker: true, //so the page doesn't lock up
+        worker: false, //so the page doesn't lock up
         comments: false,
-        // step: function (row) {  //streaming
-        //   dataImporterStore.loadData(row.data[0]);
-        // },
         complete: function (results) {
-          dataImporterStore.loadFile(file);
-          dataImporterStore.loadMeta(results.meta);
-          dataImporterStore.loadData(results.data);
-          if (dataImporterStore.isThisABigFile()) {
-            Actions.calcSmallPreviewOfData();
-          }
-
-          Actions.dataLoadedComplete();
+          loadComplete(results, file);
         },
         error: function () {
           console.log("There was an error while parsing the file.");
@@ -118,6 +112,18 @@ define([
         fastMode: true,
         beforeFirstChunk: undefined,
       });
+    },
+
+    loadingComplete: function (results, file) {
+      console.log("loadComplete");
+      dataImporterStore.loadFile(file);
+      dataImporterStore.loadMeta(results.meta);
+      dataImporterStore.loadData(results.data);
+      if (dataImporterStore.isThisABigFile()) {
+        Actions.calcSmallPreviewOfData();
+      }
+
+      Actions.dataLoadedComplete();
     },
 
     uploadButton: function () {
@@ -139,6 +145,11 @@ define([
       this.papaparse(file);
     },
 
+    onFileLimitInfoToggle: function (e) {
+      e.preventDefault();
+      var toggle = this.state.showLimitInfo ? false : true;
+      this.setState({ showLimitInfo : toggle });
+    },
 
     defaultBox: function () {
       return (
@@ -154,7 +165,14 @@ define([
             </p>
             <p>Or drag a file into box.</p>
           </div>
-          <div className="filetype-txt">(Only .csv, .tsv, or .json files)</div>
+          <div className="filetype-txt">
+            <a href="#"
+              className="import-data-limit-info-link"
+              onClick={this.onFileLimitInfoToggle}
+              data-bypass="true">
+              File Limitations
+            </a>
+          </div>
         </div>
       );
     },
@@ -184,6 +202,28 @@ define([
       );
     },
 
+    boxShowLimitInfo: function () {
+      return (
+         <div className="dropzone limitInfo"
+          onDragOver={this.dragOver} 
+          onDragLeave={this.endDragover} 
+          onDrop={this.drop}>
+          <div className="dropzone-msg">
+            <p>150 MB filesize limit.</p>
+            <p>Only .csv, .tsv, .json files will import correctly.</p>
+          </div>
+          <div className="filetype-txt">
+            <a href="#"
+              className="import-data-limit-info-link"
+              onClick={this.onFileLimitInfoToggle}
+              data-bypass="true">
+              Close
+            </a>
+          </div>
+        </div>
+      );
+    },
+
     render: function () {
       var box = this.defaultBox();
 
@@ -191,6 +231,8 @@ define([
         box = this.boxIsDraggingOver();
       } else if (this.state.loading) {
         box = this.boxIsLoading();
+      } else if (this.state.showLimitInfo){
+        box = this.boxShowLimitInfo();
       }
 
       return box;
@@ -203,7 +245,8 @@ define([
         data: dataImporterStore.getTheData(),
         meta: dataImporterStore.getTheMetadata(),
         isBigFile: dataImporterStore.isThisABigFile(),
-        rowShown: dataImporterStore.getRowsShown()
+        rowShown: dataImporterStore.getRowsShown(),
+        rowsTotal: dataImporterStore.getTotalRows()
       };
     },
 
@@ -241,23 +284,28 @@ define([
     },
 
     bigFilePreviewWarning: function () {
-      var rowShown = this.state.rowShown;
+      var rowShown = this.state.rowShown,
+          totalRows = this.state.rowsTotal;
+
       return (
         <div>
-          Because of the size of this file, this preview only shows the first {rowShown} rows.
-          However, if you choose to load the data into a database, the entirety of the file will be imported.
+          Because of the size of this file, this preview only shows the 
+          first {rowShown} rows, out of {totalRows} rows total.
+          However, if you choose to load the data into a database, the entirety 
+          of the file (all {totalRows} rows) will be imported.
         </div>
       );
     },
 
     render: function () {
       console.log("render preview");
+
       var data = this.eachRow(),
           header = this.header(),
           bigFilePreview = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
 
       return (
-        <div> Preview Page 
+        <div id="preview-page"> Preview Page 
           <a onClick={this.startover}>Start Over</a>
           {bigFilePreview}
           <table className="data-import-table">

@@ -17,9 +17,14 @@
   border: 2px solid gray;
   background-color: #E8E8E8;
   height: calc(100% ~"-" 114px);
+  min-height: 200px;
+  min-width: 200px;
   margin: 50px;
   color: @darkRed;
   padding-top: 0px !important;
+  a {
+    color: @darkRed;
+  }
   
   &.dragging-file-in-background {
     border: 2px solid @darkRed;
@@ -34,6 +39,11 @@
     .icon-file-text-alt {
       padding-right: 10px;
     }
+  }
+
+  &.limitInfo {
+    background-color: #FFF;
+    border-color: #FFF;
   }
 
   .dropzone-msg {
@@ -65,13 +75,14 @@
   }
 
   .filetype-txt {
-    position: absolute;
-    bottom: 80px;
     text-align: center;
     color: gray;
     font-size: 12px !important;
     width: 100%;
-    margin-left: -66px;
+    position: relative;
+    top: calc(100% ~"-" 114px);
+    text-align: center;
+
   }
 
   .fileUpload {
@@ -103,7 +114,25 @@
       cursor: pointer;
       opacity: 0;
       filter: alpha(opacity=0);
+  } 
+
+  .import-data-limit-info{
+    visibility: hidden;
+    &.shown {
+      visibility: visible;
+      background-color: #E8E8E8;
+    }
   }
+
+  &.limitInfo {
+    .dropzone-msg {
+      height: 90px;
+    }
+  }
+}
+
+#preview-page {
+  overflow: scroll;
 }
 
 

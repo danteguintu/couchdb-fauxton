@@ -26,6 +26,7 @@ define([
         this._theData = [];
         this._theMetadata = [];
         this._smallData = [];
+        this._time = 0;
       } // else keeps store as it was when you left
     },
 
@@ -35,6 +36,10 @@ define([
 
     dataIsLoading: function () {
       this._isDataCurrentlyLoading = true;
+    },
+
+    getTime: function () {
+      return this._time;
     },
 
     hasDataLoaded: function () {
@@ -54,7 +59,7 @@ define([
     },
 
     isThisABigFile: function () {
-      return this._theFile.size > 25000000 ? true : false;
+      return this._theFile.size > 75000 ? true : false;
     },
 
     loadMeta: function (meta) {
@@ -65,17 +70,22 @@ define([
       this._theFile = file;
     },
 
+    getTotalRows: function () {
+      return this._totalRows;
+    },
+
     calcSmallPreviewOfData: function () {
       var filesize = this._theFile.size,
           rows = this._theData.length,
           sizeOfEachRow,    //this is approximate!
-          sizeCap = 250000,
+          sizeCap = 75000,  //in bytes
           numberOfRowsToShow;
 
       sizeOfEachRow = filesize / rows;
       numberOfRowsToShow = Math.ceil(sizeCap / sizeOfEachRow);
 
       this._rowsShown = numberOfRowsToShow;
+      this._totalRows = rows;
       this._smallData = this._theData.slice(0, this._rowsShown);
     },
 
@@ -119,7 +129,6 @@ define([
 
         case ActionTypes.DATA_IMPORTER_CALC_SMALL_PREVIEW_OF_DATA:
           this.calcSmallPreviewOfData();
-          console.log("here");
           this.triggerChange();
         break;
 
