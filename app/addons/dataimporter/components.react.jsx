@@ -231,7 +231,7 @@ define([
         box = this.boxIsDraggingOver();
       } else if (this.state.loading) {
         box = this.boxIsLoading();
-      } else if (this.state.showLimitInfo){
+      } else if (this.state.showLimitInfo) {
         box = this.boxShowLimitInfo();
       }
 
@@ -288,12 +288,12 @@ define([
           totalRows = this.state.rowsTotal;
 
       return (
-        <div>
+        <p className="big-file-preview-limit-info-message">
           Because of the size of this file, this preview only shows the 
           first {rowShown} rows, out of {totalRows} rows total.
           However, if you choose to load the data into a database, the entirety 
           of the file (all {totalRows} rows) will be imported.
-        </div>
+        </p>
       );
     },
 
@@ -302,18 +302,33 @@ define([
 
       var data = this.eachRow(),
           header = this.header(),
-          bigFilePreview = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
+          previewToggle = "",
+          optionsToggle = "",
+          optionsRow = "",
+          bigFileInfoMessage = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
 
       return (
-        <div id="preview-page"> Preview Page 
-          <a onClick={this.startover}>Start Over</a>
-          {bigFilePreview}
-          <table className="data-import-table">
-            <tr>{header}</tr>
-            {data}
-          </table>
+      <div id="preview-page"> 
+          <div className="top-row">
+            <a className="start-import-over-link" 
+            onClick={this.startover}>
+            Start Over
+            </a>
+            {bigFileInfoMessage}
+            {previewToggle}
+            {optionsToggle}
+          </div>
+          <div className="import-options-row">
+            {optionsRow}
+          </div>
+          <div className="preview-data-space">
+            <table className="data-import-table">
+              <tr>{header}</tr>
+              {data}
+            </table>
+          </div>
         </div>
-        );
+      );
     }
   });
 

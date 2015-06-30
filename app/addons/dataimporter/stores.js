@@ -59,7 +59,9 @@ define([
     },
 
     isThisABigFile: function () {
-      return this._theFile.size > 75000 ? true : false;
+      console.log("UNCOMMENT OUT HERE");
+      return this._theFile.size > 7 ? true : false;
+      //return this._theFile.size > 75000 ? true : false;
     },
 
     loadMeta: function (meta) {
@@ -80,6 +82,8 @@ define([
           sizeOfEachRow,    //this is approximate!
           sizeCap = 75000,  //in bytes
           numberOfRowsToShow;
+
+
 
       sizeOfEachRow = filesize / rows;
       numberOfRowsToShow = Math.ceil(sizeCap / sizeOfEachRow);
