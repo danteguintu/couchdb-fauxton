@@ -734,6 +734,42 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
 
   });
 
+  var ToggleState = React.createClass({
+    render: function () {
+      var config = this.props.toggleConfig;
+      var leftLabel = config.leftLabel,
+          rightLabel = config.rightLabel,
+          leftClick = config.leftClick,
+          rightClick = config.rightClick,
+          enclosingID = config.enclosingID;
+
+      return (
+        <div id={enclosingID} className="toggle-states">
+          <input type="radio" 
+            id = {"toggle-state-left-id-" + enclosingID}
+            name={"toggle_" + enclosingID}
+            className="input-toggle-hidden"
+            onClick={leftClick} />
+            <label 
+              htmlFor={"toggle-state-left-id-" + enclosingID} 
+              className="checkbox-label toggle-state-button left">
+              {leftLabel}
+            </label>
+          <input type="radio"
+            id = {"toggle-state-right-id-" + enclosingID} 
+            name={"toggle_" + enclosingID}
+            className="input-toggle-hidden"
+            onClick={rightClick} />
+            <label 
+              htmlFor={"toggle-state-right-id-" + enclosingID}
+              className="checkbox-label toggle-state-button right">
+              {rightLabel}
+            </label>
+        </div>
+      );
+    }
+  });
+
 
   return {
     ConfirmButton: ConfirmButton,
@@ -746,7 +782,8 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
     PaddedBorderedBox: PaddedBorderedBox,
     Document: Document,
     LoadLines: LoadLines,
-    MenuDropDown: MenuDropDown
+    MenuDropDown: MenuDropDown,
+    ToggleState: ToggleState
   };
 
 });

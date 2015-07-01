@@ -1,0 +1,29 @@
+@import "../../../../../assets/less/variables.less";
+
+@toggleColor: @red;
+
+.toggle-states {
+  
+  color: red;
+  border: 1px solid @toggleColor;
+  width: 200px;
+  height: 20px;
+
+  .input-toggle-hidden {
+    display: none;
+  }
+
+  .toggle-state-button {
+    width: 20px;
+    label {
+      border: 1 px solid blue;
+    }
+    &.left {
+      float: left;
+    }
+
+    &.right {
+      float: right;
+    }
+  }
+}

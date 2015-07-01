@@ -16,9 +16,8 @@ define([
   'assets/js/libs/papaparse.min',
   'addons/dataimporter/stores',
   'addons/dataimporter/actions',
-  'addons/components/react-components.react',
-  'addons/fauxton/components.react'
-], function (FauxtonAPI, React, Papa, Stores, Actions, Components, FauxtonComponents) {
+  'addons/components/react-components.react'
+], function (FauxtonAPI, React, Papa, Stores, Actions, Components) {
 
   Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js'; //this is super important so we can use worker threads
 
@@ -297,12 +296,29 @@ define([
       );
     },
 
+    previewToggle: function () {
+      var config = {
+        leftLabel : "Table",
+        rightLabel : "JSON",
+        default: "Table",
+        leftClick: function () {
+          console.log("left");
+        },
+        rightClick: function () {
+          console.log("right");
+        },
+        enclosingID: "previewToggle"
+      };
+
+      return <Components.ToggleState toggleConfig={config} />;
+    },
+
     render: function () {
       console.log("render preview");
 
       var data = this.eachRow(),
           header = this.header(),
-          previewToggle = "",
+          previewToggle = this.previewToggle(),
           optionsToggle = "",
           optionsRow = "",
           bigFileInfoMessage = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
