@@ -295,25 +295,45 @@ define([
       );
     },
 
-    optionsToggle: function () {
-      var config = {
-        title: 'Options',
-        leftLabel : 'Show',
-        rightLabel : 'Hide',
-        defaultLeft: false,
-        leftClick: function () {
-          console.log("left");
-        },
-        rightClick: function () {
-          console.log("right");
-        },
-        enclosingID: 'optionsToggle'
-      };
 
-      return <Components.ToggleState toggleConfig={config} />;
-    },
+    render: function () {
+      console.log("render preview");
 
-    previewToggle: function () {
+      var data = this.eachRow(),
+          header = this.header(),
+          bigFileInfoMessage = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
+
+      return (
+        <div id="preview-page"> 
+          <div className="top-row">
+            <a className="start-import-over-link" 
+              onClick={this.startover}>
+            Start Over
+            </a>
+            <div className="big-file-info-message">{bigFileInfoMessage}</div>
+          </div>
+          <div className="import-options-row">
+            <OptionsRow />
+          </div>
+          <div className="preview-data-space">
+            <table className="data-import-table">
+              <tr>{header}</tr>
+              {data}
+            </table>
+          </div>
+          <div className="footer">
+            <span>Database Import</span>
+            <span>Databse Choose</span>
+            <span>Import Button</span>
+          </div>
+        </div>
+      );
+    }
+  });
+
+  var OptionsRow = React.createClass({
+
+     previewToggle: function () {
       var config = {
         title: 'Preview View',
         leftLabel : 'Table',
@@ -331,43 +351,87 @@ define([
       return <Components.ToggleState toggleConfig={config} />;
     },
 
+
+    header: function () {
+      var config = {
+        title: 'Header',
+        leftLabel : 'First Line',
+        rightLabel : 'No Header',
+        defaultLeft: true,
+        leftClick: function () {
+          console.log("left");
+        },
+        rightClick: function () {
+          console.log("right");
+        },
+        enclosingID: 'headerToggle'
+      };
+
+      return <Components.ToggleState toggleConfig={config} />;
+    },
+
+    one_doc_per_row: function () {
+      var config = {
+        title: 'One Document Per',
+        leftLabel : 'Row',
+        rightLabel : 'File',
+        defaultLeft: true,
+        leftClick: function () {
+          console.log("left");
+        },
+        rightClick: function () {
+          console.log("right");
+        },
+        enclosingID: 'document-type-Toggle'
+      };
+      return <Components.ToggleState toggleConfig={config} />;
+
+    },
+
+    numbers_format: function () {
+      var config = {
+        title: 'Numbers are',
+        leftLabel : 'Numbers',
+        rightLabel : 'Strings',
+        defaultLeft: true,
+        leftClick: function () {
+          console.log("left");
+        },
+        rightClick: function () {
+          console.log("right");
+        },
+        enclosingID: 'numbersToggle'
+      };
+      return <Components.ToggleState toggleConfig={config} />;
+
+    },
+
+    delimiter: function () {
+      var config = {
+        title: 'Delimiter',
+        leftLabel : 'Drop',
+        rightLabel : 'Down',
+        defaultLeft: true,
+        leftClick: function () {
+          console.log("left");
+        },
+        rightClick: function () {
+          console.log("right");
+        },
+        enclosingID: 'delimiterToggle'
+      };
+      return <Components.ToggleState toggleConfig={config} />;
+
+    },
+
     render: function () {
-      console.log("render preview");
-
-      var data = this.eachRow(),
-          header = this.header(),
-          previewToggle = this.previewToggle(),
-          optionsToggle = this.optionsToggle(),
-          optionsRow = '',
-          bigFileInfoMessage = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
-
       return (
-      <div id="preview-page"> 
-          <div className="top-row">
-            <div className= "left-top-row">
-              <a className="start-import-over-link" 
-                onClick={this.startover}>
-              Start Over
-              </a>
-              <div className="big-file-info-message">{bigFileInfoMessage}</div>
-            <div className="top-row-toggle-box">
-              <div className="top-row-toggles">
-                <div className="preview-toggle">{previewToggle}</div>
-                <div className="options-toggle">{optionsToggle}</div>
-              </div>
-            </div>
-            </div>
-          </div>
-
-          <div className="import-options-row">
-            {optionsRow}
-          </div>
-          <div className="preview-data-space">
-            <table className="data-import-table">
-              <tr>{header}</tr>
-              {data}
-            </table>
-          </div>
+        <div className="options-row">
+          {this.previewToggle()}
+          {this.header()}
+          {this.one_doc_per_row()}
+          {this.numbers_format()}
+          {this.delimiter()}
         </div>
       );
     }
