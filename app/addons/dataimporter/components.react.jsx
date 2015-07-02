@@ -320,6 +320,7 @@ define([
               <tr>{header}</tr>
               {data}
             </table>
+            <Components.SimpleDoc />
           </div>
           <div className="footer">
             <span>Database Import</span>
