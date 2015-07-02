@@ -296,18 +296,35 @@ define([
       );
     },
 
-    previewToggle: function () {
+    optionsToggle: function () {
       var config = {
-        leftLabel : "Table",
-        rightLabel : "JSON",
-        default: true,
+        title: 'Options',
+        leftLabel : 'Show',
+        rightLabel : 'Hide',
+        defaultLeft: false,
         leftClick: function () {
           console.log("left");
         },
         rightClick: function () {
           console.log("right");
         },
-        enclosingID: "previewToggle"
+        enclosingID: 'previewToggle'
+      };
+    },
+
+    previewToggle: function () {
+      var config = {
+        title: 'Preview View',
+        leftLabel : 'Table',
+        rightLabel : 'JSON',
+        defaultLeft: true,
+        leftClick: function () {
+          console.log("left");
+        },
+        rightClick: function () {
+          console.log("right");
+        },
+        enclosingID: 'previewToggle'
       };
 
       return <Components.ToggleState toggleConfig={config} />;
@@ -319,8 +336,8 @@ define([
       var data = this.eachRow(),
           header = this.header(),
           previewToggle = this.previewToggle(),
-          optionsToggle = "",
-          optionsRow = "",
+          optionsToggle = '',
+          optionsRow = '',
           bigFileInfoMessage = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
 
       return (

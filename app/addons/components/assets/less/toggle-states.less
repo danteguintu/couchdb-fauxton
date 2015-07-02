@@ -3,35 +3,47 @@
 @toggleColor: @red;
 
 .toggle-states {
-  color: #aaa;
-  border: 1px solid #ccc;
-  width: 202px;
-  height: 20px;
+  width: 182px;
+  height: 23px;
+  text-align: center;
 
   .input-toggle-hidden {
     display: none;
   }
-
-  .toggle-state-button {
-    background: #fff;
-    margin: 0px;
-    padding: 0px;
-    width: 100px;
-    text-align: center;
+  
+  .toggleTitle {
     font-size: 11px;
+    color: #838383;
+    margin-bottom: 3px;
+  }
+
+  .toggles {
+    color: #908F8F;
+    border: 1px solid #ccc;
+    height: 100%;
     
-    &.left {
-      float: left;
+    .toggle-state-button {
+      background: #fff;
+      margin: 0px;
+      padding: 0px;
+      width: 90px;
+      font-size: 11px;
+      
+      &.left {
+        float: left;
+      }
+
+      &.right {
+        float: right;
+      }
     }
 
-    &.right {
-      float: right;
+    input[type="radio"]:checked+label{ 
+      font-weight: bold; 
+      background: #E8E8E8;
+      color: @darkRed;
     }
   }
 
-  input[type="radio"]:checked+label{ 
-    font-weight: bold; 
-    background: #E8E8E8;
-    color: @darkRed;
-  }
+  
 }
