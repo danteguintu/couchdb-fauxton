@@ -308,8 +308,10 @@ define([
         rightClick: function () {
           console.log("right");
         },
-        enclosingID: 'previewToggle'
+        enclosingID: 'optionsToggle'
       };
+
+      return <Components.ToggleState toggleConfig={config} />;
     },
 
     previewToggle: function () {
@@ -336,21 +338,28 @@ define([
       var data = this.eachRow(),
           header = this.header(),
           previewToggle = this.previewToggle(),
-          optionsToggle = '',
+          optionsToggle = this.optionsToggle(),
           optionsRow = '',
           bigFileInfoMessage = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
 
       return (
       <div id="preview-page"> 
           <div className="top-row">
-            <a className="start-import-over-link" 
-            onClick={this.startover}>
-            Start Over
-            </a>
-            {bigFileInfoMessage}
-            {previewToggle}
-            {optionsToggle}
+            <div className= "left-top-row">
+              <a className="start-import-over-link" 
+                onClick={this.startover}>
+              Start Over
+              </a>
+              <div className="big-file-info-message">{bigFileInfoMessage}</div>
+            <div className="test">
+              <div className="top-row-toggles">
+                <div className="preview-toggle">{previewToggle}</div>
+                <div className="options-toggle">{optionsToggle}</div>
+              </div>
+            </div>
+            </div>
           </div>
+
           <div className="import-options-row">
             {optionsRow}
           </div>

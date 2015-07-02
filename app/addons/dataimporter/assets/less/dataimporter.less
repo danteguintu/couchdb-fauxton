@@ -140,26 +140,53 @@
   .top-row {
     font-size: 13px;
     border-bottom: 2px solid gray;
-
     display: inline-block;
     width: 100%;
     padding-top: 10px;
 
-    .start-import-over-link {
-      background-color: @darkRed;
-      color: #fff;
-      padding: 10px;
-      margin-right: 30px;
-      margin-bottom: 20px;
-      vertical-align:top;
-      display: inline-block;
+    .left-top-row{
+      min-width: 300px;
+      
+      .start-import-over-link {
+        background-color: @darkRed;
+        color: #fff;
+        padding: 10px;
+        margin-right: 30px;
+        margin-bottom: 20px;
+        vertical-align:top;
+        display: inline-block;
+      }
+
+      .big-file-info-message {
+        display: inline-block;
+        max-width: 400px;
+        margin: 0 auto;
+        vertical-align: top;
+
+        .big-file-preview-limit-info-message {
+          display: inline-block;
+          margin-top: -7px;
+        }
+      }
     }
 
-    .big-file-preview-limit-info-message {
+    .test{
       display: inline-block;
-      max-width: 400px;
-      vertical-align: top;
-      margin-top: -7px;
+      width: calc(100% ~"-" 510px);
+      min-width: 200px;
+    }
+    .top-row-toggles {
+      display: inline-block;
+      float: right;
+      
+      .preview-toggle, .options-toggle {
+        display: inline-block;
+        padding-top: 8px;
+        padding-right: 10px;
+        position: relative;
+        top: -10px;
+        float:right;
+      }
     }
   }
 
@@ -170,5 +197,3 @@
   }
 
 }
-
-
