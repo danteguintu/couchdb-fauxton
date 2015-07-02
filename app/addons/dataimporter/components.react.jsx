@@ -300,7 +300,7 @@ define([
       var config = {
         leftLabel : "Table",
         rightLabel : "JSON",
-        default: "Table",
+        default: true,
         leftClick: function () {
           console.log("left");
         },

@@ -3,10 +3,9 @@
 @toggleColor: @red;
 
 .toggle-states {
-  
-  color: red;
-  border: 1px solid @toggleColor;
-  width: 200px;
+  color: #aaa;
+  border: 1px solid #ccc;
+  width: 202px;
   height: 20px;
 
   .input-toggle-hidden {
@@ -14,10 +13,13 @@
   }
 
   .toggle-state-button {
-    width: 20px;
-    label {
-      border: 1 px solid blue;
-    }
+    background: #fff;
+    margin: 0px;
+    padding: 0px;
+    width: 100px;
+    text-align: center;
+    font-size: 11px;
+    
     &.left {
       float: left;
     }
@@ -25,5 +27,11 @@
     &.right {
       float: right;
     }
+  }
+
+  input[type="radio"]:checked+label{ 
+    font-weight: bold; 
+    background: #E8E8E8;
+    color: @darkRed;
   }
 }

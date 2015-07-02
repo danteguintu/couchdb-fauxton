@@ -735,13 +735,29 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
   });
 
   var ToggleState = React.createClass({
+    getDefaultProps: function () {
+      return {
+        defaultLeft: 'true'
+      };
+    },
     render: function () {
-      var config = this.props.toggleConfig;
+      var config = this.props.toggleConfig,
+          defaultLeft = "" ,
+          defaultRight = "";
+
       var leftLabel = config.leftLabel,
           rightLabel = config.rightLabel,
           leftClick = config.leftClick,
           rightClick = config.rightClick,
           enclosingID = config.enclosingID;
+
+      if (config.default) {
+        defaultLeft = "checked";
+        defaultRight = "false";
+      } else {
+        defaultRight = "checked";
+        defaultLeft = "false";
+      }
 
       return (
         <div id={enclosingID} className="toggle-states">
@@ -749,20 +765,22 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
             id = {"toggle-state-left-id-" + enclosingID}
             name={"toggle_" + enclosingID}
             className="input-toggle-hidden"
+            defaultChecked = {defaultLeft}
             onClick={leftClick} />
             <label 
               htmlFor={"toggle-state-left-id-" + enclosingID} 
-              className="checkbox-label toggle-state-button left">
+              className="checkbox-label toggle-state-button left noselect">
               {leftLabel}
             </label>
           <input type="radio"
             id = {"toggle-state-right-id-" + enclosingID} 
             name={"toggle_" + enclosingID}
-            className="input-toggle-hidden"
+            defaultChecked = {defaultRight}
+            className="input-toggle-hidden "
             onClick={rightClick} />
             <label 
               htmlFor={"toggle-state-right-id-" + enclosingID}
-              className="checkbox-label toggle-state-button right">
+              className="checkbox-label toggle-state-button right noselect">
               {rightLabel}
             </label>
         </div>
