@@ -252,7 +252,7 @@ define([
       var header = this.state.meta.fields;
       return (
         header.map(function (field, i) {
-          return <td key={i}>{field}</td>;
+          return <th key={i} title={field}>{field}</th>;
         })
       );
     },
@@ -273,7 +273,7 @@ define([
 
     insideEachRow: function (dataObj) {
       return _.map(dataObj, function (dataVal, dataKey) {
-        return <td key={dataKey}>{dataVal}</td>;
+        return <td key={dataKey} title={dataVal}>{dataVal}</td>;
       });
     },
 

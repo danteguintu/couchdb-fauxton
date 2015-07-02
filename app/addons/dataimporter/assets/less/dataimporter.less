@@ -187,6 +187,35 @@
     min-width: 300px;
     padding-bottom: @footerHeight + 20px;
     overflow: scroll;
+
+    .data-import-table {
+      color: @darkRed;
+      tr {
+        height: 50px;
+      }
+      td {
+        padding: 15px;
+        color: white;
+        background-color: #4d4d4d;
+        border: 1px solid black;
+ 
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      th {
+        background-color: #3a3a3a;
+        border: 1px solid black;
+        padding: 15px;
+ 
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
   }
 
   .footer {
