@@ -233,7 +233,6 @@ define([
       } else if (this.state.showLimitInfo) {
         box = this.boxShowLimitInfo();
       }
-
       return box;
     }
   });
@@ -351,7 +350,7 @@ define([
               Start Over
               </a>
               <div className="big-file-info-message">{bigFileInfoMessage}</div>
-            <div className="test">
+            <div className="top-row-toggle-box">
               <div className="top-row-toggles">
                 <div className="preview-toggle">{previewToggle}</div>
                 <div className="options-toggle">{optionsToggle}</div>
