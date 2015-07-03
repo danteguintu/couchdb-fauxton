@@ -29,11 +29,26 @@ function (FauxtonAPI, ActionTypes, Resources) {
       });
     },
 
-    parseData: function (file) {
+    loadFile: function (file) {
       FauxtonAPI.dispatch({
-        type: ActionTypes.DATA_IMPORTER_PARSE_DATA,
+        type: ActionTypes.DATA_IMPORTER_LOAD_FILE,
         file: file
-      })
+      });
+    },
+
+    setPreviewView: function (viewType) {
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_SET_PREVIEW_VIEW,
+        view: viewType
+      });
+    },
+
+    setParseConfig: function (key, value) {
+      FauxtonAPI.dispatch({
+        type: ActionTypes.DATA_IMPORTER_SET_PARSE_CONFIG,
+        key: key,
+        value: value
+      });
     }
   };
 });

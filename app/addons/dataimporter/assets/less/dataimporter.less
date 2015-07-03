@@ -132,6 +132,14 @@
 }
 
 @footerHeight : 100px;
+.chartSpacing() {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 1px solid black;
+  padding: 15px;
+}
 
 #preview-page {
   min-height: 200px;
@@ -150,7 +158,6 @@
       background-color: @darkRed;
       color: #fff;
       padding: 10px;
-      margin-right: 30px;
       margin-bottom: 20px;
       vertical-align: middle;
       display: inline-block;
@@ -166,6 +173,7 @@
       .big-file-preview-limit-info-message {
         display: inline-block;
         margin-top: -7px;
+        margin-left: 5px;
       }
     }
   }
@@ -185,35 +193,26 @@
   }
   .preview-data-space {
     min-width: 300px;
-    padding-bottom: @footerHeight + 20px;
+    margin-bottom: @footerHeight + 10px;
     overflow: auto;
 
     .data-import-table {
-      color: @red;
+      
+      margin: auto;
       tr {
         height: 50px;
       }
+
       td {
-        padding: 15px;
         color: white;
         background-color: #4d4d4d;
-        border: 1px solid black;
- 
-        max-width: 150px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        .chartSpacing;
       }
 
       th {
+        color: @red;
         background-color: #3a3a3a;
-        border: 1px solid black;
-        padding: 15px;
- 
-        max-width: 150px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        .chartSpacing;
       }
     }
   }

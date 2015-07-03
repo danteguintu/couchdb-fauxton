@@ -17,8 +17,7 @@ define([
   'assets/js/libs/papaparse.min'
 ], function (app, FauxtonAPI, ActionTypes, Papa) {
 
-  //Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js';
-  //this is important if we want to use worker threads
+  // Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js';
 
   var DataImporterStore = FauxtonAPI.Store.extend({
 
@@ -31,6 +30,10 @@ define([
         this._theMetadata = [];
         this._smallData = [];
         this._time = 0;
+        this._showView = 'table';
+        this._theFile = { size: 0 };
+        this._config = this.getDefaultConfig();
+
       } // else keeps store as it was when you left
     },
 
@@ -73,11 +76,20 @@ define([
     },
 
     loadFile: function (file) {
+      console.log(file);
       this._theFile = file;
     },
 
     getTotalRows: function () {
       return this._totalRows;
+    },
+
+    getPreviewView: function () {
+      return this._showView;
+    },
+
+    setPreviewView: function (type) {
+      this._showView = type;
     },
 
     calcSmallPreviewOfData: function () {
@@ -86,8 +98,6 @@ define([
           sizeOfEachRow,    //this is approximate!
           sizeCap = 75000,  //in bytes
           numberOfRowsToShow;
-
-
 
       sizeOfEachRow = filesize / rows;
       numberOfRowsToShow = Math.ceil(sizeCap / sizeOfEachRow);
@@ -113,9 +123,31 @@ define([
       return this._theData;
     },
 
-    papaparse: function (file) {
+    papaparse: function () {
+      Papa.parse(this._theFile, this._config);
+    },
 
-      var results = Papa.parse(file, {
+    loadingComplete: function (results) {
+      this.loadMeta(results.meta);
+      this.loadData(results.data);
+      if (this.isThisABigFile()) {
+        this.calcSmallPreviewOfData();
+      }
+
+      this.dataLoaded();
+      this.triggerChange();
+    },
+
+    setParseConfig: function (key, value) {
+      this._config[key] = value;
+    },
+
+    getConfigSetting: function (key) {
+      return this._config[key];
+    },
+
+    getDefaultConfig: function () {
+      return {
         delimiter : "",  // auto-detect
         newline: "",  // auto-detect
         header: true,
@@ -125,7 +157,8 @@ define([
         worker: false, //so the page doesn't lock up
         comments: false,
         complete: function (results) {
-          this.loadingComplete(results, file);
+          console.log("complete");
+          this.loadingComplete(results);
         }.bind(this),
         error: function () {
           console.log("There was an error while parsing the file.");
@@ -136,19 +169,7 @@ define([
         chunk: undefined,
         fastMode: true,
         beforeFirstChunk: undefined,
-      });
-    },
-
-    loadingComplete: function (results, file) {
-      this.loadFile(file);
-      this.loadMeta(results.meta);
-      this.loadData(results.data);
-      if (this.isThisABigFile()) {
-        this.calcSmallPreviewOfData();
-      }
-
-      this.dataLoaded();
-      this.triggerChange();
+      };
     },
 
     dispatch: function (action) {
@@ -163,13 +184,21 @@ define([
           this.triggerChange();
         break;
 
-        case ActionTypes.DATA_IMPORTER_CALC_SMALL_PREVIEW_OF_DATA:
-          this.calcSmallPreviewOfData();
+        case ActionTypes.DATA_IMPORTER_LOAD_FILE:
+          console.log(action.file);
+          this.loadFile(action.file);
+          this.papaparse(action.file);
+        break;
+
+        case ActionTypes.DATA_IMPORTER_SET_PREVIEW_VIEW:
+          this.setPreviewView(action.view);
           this.triggerChange();
         break;
 
-        case ActionTypes.DATA_IMPORTER_PARSE_DATA:
-          this.papaparse(action.file);
+        case ActionTypes.DATA_IMPORTER_SET_PARSE_CONFIG:
+          this.setParseConfig(action.key, action.value);
+          this.papaparse(this._theFile);
+          this.triggerChange();
         break;
 
         default:

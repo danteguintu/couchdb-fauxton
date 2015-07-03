@@ -24,7 +24,14 @@ define([
     getStoreState: function () {
       return {
         isDataCurrentlyLoading: dataImporterStore.isDataCurrentlyLoading(),
-        hasDataLoaded: dataImporterStore.hasDataLoaded()
+        hasDataLoaded: dataImporterStore.hasDataLoaded(),
+        isBigFile: dataImporterStore.isThisABigFile(),
+        rowShown: dataImporterStore.getRowsShown(),
+        rowsTotal: dataImporterStore.getTotalRows(),
+        data: dataImporterStore.getTheData(),
+        meta: dataImporterStore.getTheMetadata(),
+        getPreviewView: dataImporterStore.getPreviewView(),
+        getSmallPreviewOfData: dataImporterStore.getSmallPreviewOfData()
       };
     },
 
@@ -46,7 +53,16 @@ define([
 
     render: function () {
       if (this.state.hasDataLoaded) {
-        return <DataImporterPreviewData />;
+        return (
+          <DataImporterPreviewData 
+            rowShown={this.state.rowShown} 
+            rowsTotal={this.state.rowsTotal} 
+            data={this.state.data} 
+            isBigFile={this.state.isBigFile} 
+            meta={this.state.meta}
+            getPreviewView={this.state.getPreviewView}
+            getSmallPreviewOfData={this.state.getSmallPreviewOfData}/>
+        );
       } else {
         return <DataImporterDropZone isLoading={this.state.isDataCurrentlyLoading} />;
       }
@@ -75,13 +91,13 @@ define([
     drop: function (e) {
       this.captureEventAndSetLoading(e);
       var file = e.nativeEvent.dataTransfer.files[0];
-      Actions.parseData(file);
+      Actions.loadFile(file);
     },
 
     filechosen: function (e) {
       this.captureEventAndSetLoading(e);
       var file = e.nativeEvent.target.files[0];
-      Actions.parseData(file);
+      Actions.loadFile(file);
     },
 
     captureEventAndSetLoading: function (e) {
@@ -194,19 +210,11 @@ define([
   });
 
   var DataImporterPreviewData = React.createClass({
-    getInitialState: function () {
-      return {
-        isBigFile: dataImporterStore.isThisABigFile(),
-        rowShown: dataImporterStore.getRowsShown(),
-        rowsTotal: dataImporterStore.getTotalRows()
-      };
-    },
-
     startOverButton: function () {
       return (
         <a className="start-import-over-link" 
           onClick={this.startover}>
-        Start Over
+          Start Over
         </a>
       );
     },
@@ -216,8 +224,8 @@ define([
     },
 
     bigFilePreviewWarning: function () {
-      var rowShown = this.state.rowShown,
-          totalRows = this.state.rowsTotal;
+      var rowShown = this.props.rowShown,
+          totalRows = this.props.rowsTotal;
 
       return (
         <div className="big-file-info-message">
@@ -233,7 +241,7 @@ define([
 
     render: function () {
       var startOverButton = this.startOverButton(),
-          bigFileInfoMessage = this.state.isBigFile ? this.bigFilePreviewWarning() : "";
+          bigFileInfoMessage = this.props.isBigFile ? this.bigFilePreviewWarning() : "";
 
       return (
         <div id="preview-page"> 
@@ -241,17 +249,110 @@ define([
             {startOverButton}
             {bigFileInfoMessage}
           </div>
-          <div className="import-options-row">
-            <OptionsRow />
-          </div>
+          <OptionsRow />
           <div className="preview-data-space">
-            <TableView />
-            <JSONView />
+            <TableView 
+              data={this.props.data} 
+              isBigFile={this.props.isBigFile} 
+              meta={this.props.meta}
+              getPreviewView={this.props.getPreviewView}
+              getSmallPreviewOfData={this.props.getSmallPreviewOfData} />
+            <JSONView 
+              data={this.props.data} 
+              isBigFile={this.props.isBigFile} 
+              meta={this.props.meta}
+              getPreviewView={this.props.getPreviewView}
+              getSmallPreviewOfData={this.props.getSmallPreviewOfData} />
           </div>
-          <div className="footer">
-            <span>Database Import</span>
-            <span>Databse Choose</span>
-            <span>Import Button</span>
+          <Footer />
+        </div>
+      );
+    }
+  });
+
+  var OptionsRow = React.createClass({
+    previewToggle: function () {
+      var config = {
+        title: 'Preview View',
+        leftLabel : 'Table',
+        rightLabel : 'JSON',
+        defaultLeft: true,
+        leftClick: function () { Actions.setPreviewView('table'); },
+        rightClick: function () { Actions.setPreviewView('json'); },
+        enclosingID: 'preview-toggle-id'
+      };
+
+      return <Components.ToggleState toggleConfig={config} />;
+    },
+
+    header: function () {
+      var config = {
+        title: 'Header',
+        leftLabel : 'First Line',
+        rightLabel : 'No Header',
+        defaultLeft: true,
+        leftClick: function () {  Actions.setParseConfig('header', true); },
+        rightClick: function () { Actions.setParseConfig('header', false); },
+        enclosingID: 'header-toggle-id'
+      };
+
+      return <Components.ToggleState toggleConfig={config} />;
+    },
+
+    one_doc_per_row: function () {
+      var config = {
+        title: 'One Document Per',
+        leftLabel : 'Row',
+        rightLabel : 'File',
+        defaultLeft: true,
+        leftClick: function () {  Actions.setParseConfig('newline', true); },
+        rightClick: function () { Actions.setParseConfig('newline', false); },
+        enclosingID: 'document-type-toggle-id'
+      };
+      return <Components.ToggleState toggleConfig={config} />;
+
+    },
+
+    numbers_format: function () {
+      var config = {
+        title: 'Numbers are',
+        leftLabel : 'Numbers',
+        rightLabel : 'Strings',
+        defaultLeft: true,
+        leftClick: function () {
+          Actions.setParseConfig('dynamicTyping', true);
+        },
+        rightClick: function () {
+          Actions.setParseConfig('dynamicTyping', false);
+        },
+        enclosingID: 'numbers-toggle-id'
+      };
+      return <Components.ToggleState toggleConfig={config} />;
+
+    },
+
+    delimiter: function () {
+      var config = {
+        title: 'Delimiter',
+        leftLabel : 'Drop',
+        rightLabel : 'Down',
+        defaultLeft: true,
+        leftClick: function () {console.log("left");},
+        rightClick: function () {console.log("right");},
+        enclosingID: 'delimiter-toggle-id'
+      };
+      return <Components.ToggleState toggleConfig={config} />;
+    },
+
+    render: function () {
+      return (
+        <div className="import-options-row">
+          <div className="options-row">
+            {this.previewToggle()}
+            {this.header()}
+            {this.one_doc_per_row()}
+            {this.numbers_format()}
+            {this.delimiter()}
           </div>
         </div>
       );
@@ -259,19 +360,14 @@ define([
   });
 
   var TableView = React.createClass({
-    getInitialState: function () {
-      return {
-        data: dataImporterStore.getTheData(),
-        meta: dataImporterStore.getTheMetadata(),
-        isBigFile: dataImporterStore.isThisABigFile(),
-      };
-    },
+
+
 
     eachRow: function () {
-      var data = this.state.data;
+      var data = this.props.data;
 
-      if (this.state.isBigFile) {
-        data = dataImporterStore.getSmallPreviewOfData();
+      if (this.props.isBigFile) {
+        data = this.props.getSmallPreviewOfData;
       }
 
       return (
@@ -288,40 +384,41 @@ define([
     },
 
     header: function () {
-      var header = this.state.meta.fields;
-      return (
-        header.map(function (field, i) {
-          return <th key={i} title={field}>{field}</th>;
-        })
-      );
+      if (dataImporterStore.getConfigSetting('header')) {
+        var header = this.props.meta.fields;
+        return (
+          header.map(function (field, i) {
+            return <th key={i} title={field}>{field}</th>;
+          })
+        );
+      } else {
+        return null;
+      }
     },
 
     render: function () {
       var data = this.eachRow(),
           header = this.header();
-      return (
-        <table className="data-import-table">
-          <tr>{header}</tr>
-          {data}
-        </table>
-      );
+
+      if (this.props.getPreviewView === 'table') {
+        return (
+          <table className="data-import-table">
+            <tr>{header}</tr>
+            {data}
+          </table>
+        );
+      } else {
+        return null;
+      }
     }
   });
 
   var JSONView = React.createClass({
-    getInitialState: function () {
-      return {
-        data: dataImporterStore.getTheData(),
-        meta: dataImporterStore.getTheMetadata(),
-        isBigFile: dataImporterStore.isThisABigFile()
-      };
-    },
-
     rows: function () {
-      var data = this.state.data;
+      var data = this.props.data;
 
-      if (this.state.isBigFile) {
-        data = dataImporterStore.getSmallPreviewOfData();
+      if (this.props.isBigFile) {
+        data = this.props.getSmallPreviewOfData;
       }
 
       return (
@@ -337,113 +434,25 @@ define([
     },
 
     render: function () {
-      return (
-        <div id="doc-list" className="json-view">
-          {this.rows()}
-        </div>
-      );
+      if (this.props.getPreviewView === "json") {
+        return (
+          <div id="doc-list" className="json-view">
+            {this.rows()}
+          </div>
+        );
+      } else {
+        return null;
+      }
     }
   });
 
-  var OptionsRow = React.createClass({
-    previewToggle: function () {
-      var config = {
-        title: 'Preview View',
-        leftLabel : 'Table',
-        rightLabel : 'JSON',
-        defaultLeft: true,
-        leftClick: function () {
-          console.log("left");
-        },
-        rightClick: function () {
-          console.log("right");
-        },
-        enclosingID: 'preview-toggle-id'
-      };
-
-      return <Components.ToggleState toggleConfig={config} />;
-    },
-
-    header: function () {
-      var config = {
-        title: 'Header',
-        leftLabel : 'First Line',
-        rightLabel : 'No Header',
-        defaultLeft: true,
-        leftClick: function () {
-          console.log("left");
-        },
-        rightClick: function () {
-          console.log("right");
-        },
-        enclosingID: 'header-toggle-id'
-      };
-
-      return <Components.ToggleState toggleConfig={config} />;
-    },
-
-    one_doc_per_row: function () {
-      var config = {
-        title: 'One Document Per',
-        leftLabel : 'Row',
-        rightLabel : 'File',
-        defaultLeft: true,
-        leftClick: function () {
-          console.log("left");
-        },
-        rightClick: function () {
-          console.log("right");
-        },
-        enclosingID: 'document-type-toggle-id'
-      };
-      return <Components.ToggleState toggleConfig={config} />;
-
-    },
-
-    numbers_format: function () {
-      var config = {
-        title: 'Numbers are',
-        leftLabel : 'Numbers',
-        rightLabel : 'Strings',
-        defaultLeft: true,
-        leftClick: function () {
-          console.log("left");
-        },
-        rightClick: function () {
-          console.log("right");
-        },
-        enclosingID: 'numbers-toggle-id'
-      };
-      return <Components.ToggleState toggleConfig={config} />;
-
-    },
-
-    delimiter: function () {
-      var config = {
-        title: 'Delimiter',
-        leftLabel : 'Drop',
-        rightLabel : 'Down',
-        defaultLeft: true,
-        leftClick: function () {
-          console.log("left");
-        },
-        rightClick: function () {
-          console.log("right");
-        },
-        enclosingID: 'delimiter-toggle-id'
-      };
-      return <Components.ToggleState toggleConfig={config} />;
-
-    },
-
+  var Footer = React.createClass({
     render: function () {
       return (
-        <div className="options-row">
-          {this.previewToggle()}
-          {this.header()}
-          {this.one_doc_per_row()}
-          {this.numbers_format()}
-          {this.delimiter()}
+        <div className="footer">
+          <span>Database Import</span>
+          <span>Databse Choose</span>
+          <span>Import Button</span>
         </div>
       );
     }

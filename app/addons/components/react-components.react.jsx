@@ -766,8 +766,8 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
     },
     render: function () {
       var config = this.props.toggleConfig,
-          defaultLeft = '',
-          defaultRight = '';
+          defaultLeft = false,
+          defaultRight = false;
 
       var title = config.title,
           leftLabel = config.leftLabel,
@@ -776,12 +776,12 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
           rightClick = config.rightClick,
           enclosingID = config.enclosingID;
 
-      if (config.default) {
+      if (config.defaultLeft) {
         defaultLeft = "checked";
-        defaultRight = "false";
+        defaultRight = false;
       } else {
         defaultRight = "checked";
-        defaultLeft = "false";
+        defaultLeft = false;
       }
 
       return (
