@@ -1,0 +1,57 @@
+@import "../../../../../assets/less/mixins.less";
+
+.small-dropdown {
+  display: inline-block;
+  width: 182px;
+  height: 40px;
+  font-size: 11px;
+  vertical-align: bottom;
+
+  .title {
+    font-size: 11px;
+    color: #838383;
+    margin-bottom: 3px;
+  }
+
+  .selected {
+    display: block;
+    font-weight: bold; 
+    background: white;
+    color: @darkRed;
+    height: 20px;
+    border: 1px solid #ccc;
+    padding-top: 2px;
+    /*.noselect() uncomment out when mixin lands */
+    
+    #dropdown-icon {
+      float: right;
+      padding-right: 10px;
+      padding-top: 2px;
+    }
+  }
+
+  ul.dropdown-select {
+    display: none;
+    border: 1px solid #ccc;
+
+    &.show {
+      display: block !important;
+      z-index:1000;
+      margin: 0px;
+      padding: 0px;
+      
+      li {
+        color: #908F8F;
+        list-style: none;
+        background: #E8E8E8;
+        width: 182px;
+
+        &:hover {
+          font-weight:bold;
+          color: @darkRed;
+        }
+      }
+
+    }
+  }
+}

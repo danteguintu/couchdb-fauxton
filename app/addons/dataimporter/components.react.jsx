@@ -322,16 +322,16 @@ define([
     },
 
     delimiter: function () {
-      var config = {
+      var setup = {
         title: 'Delimiter',
-        leftLabel : 'Drop',
-        rightLabel : 'Down',
-        defaultLeft: true,
-        leftClick: function () {console.log("left");},
-        rightClick: function () {console.log("right");},
-        enclosingID: 'delimiter-toggle-id'
+        id: 'data-importer-delimiter',
+        selected: 'Automatic',
+        selectOptions: [
+          { name: "a", onClick: function () {  console.log("a"); }  },
+          { name: "b", onClick: function () {  console.log("b"); }  },
+        ]
       };
-      return <Components.ToggleState toggleConfig={config} />;
+      return <Components.SmallDropdown dropdownSetup={setup}/>;
     },
 
     render: function () {
@@ -370,15 +370,17 @@ define([
     },
 
     header: function () {
+      var header = null;
+
       if (this.props.getHeaderConfig) {
-        var header = this.props.meta.fields;
+        header = this.props.meta.fields;
         return (
           header.map(function (field, i) {
             return <th key={i} title={field}>{field}</th>;
           })
         );
       } else {
-        var header = this.props.data;
+        header = this.props.data;
         return (
           header.map(function (field, i) {
            return <th key={i} title={i}>{i}</th>;
@@ -424,13 +426,13 @@ define([
 
       return (
         data.map(function (dataObj, i) {
-          var dataObj = this.props.getHeaderConfig ? dataObj :
+          var obj = this.props.getHeaderConfig ? dataObj :
             this.objectify(dataObj);
 
           return (
             <Components.SimpleDoc 
               id={i} 
-              content={JSON.stringify(dataObj, null, ' ')}
+              content={JSON.stringify(obj, null, ' ')}
               key={i} />
           );
         }.bind(this))

@@ -816,6 +816,53 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
     }
   });
 
+  var SmallDropdown = React.createClass({
+    getInitialState: function () {
+      return {
+        show: false
+      };
+    },
+
+    toggleMenu: function () {
+      this.setState({ show: !this.state.show});
+    },
+
+    selectOptions: function () {
+      var selects = this.props.dropdownSetup.selectOptions;
+
+      return selects.map(function (opt, i) {
+        var name = opt.name,
+            fn = opt.onClick;
+
+        return (
+          <li key={i} 
+            onClick={fn}
+            className="dropdown-options">
+          {name}
+          </li>
+        );
+      });
+    },
+
+    render: function () {
+      var setup = this.props.dropdownSetup,
+          show = this.state.show ? 'show' : '';
+
+      return (
+        <div id={setup.id} className="small-dropdown">
+          <div className="title">{setup.title}</div>
+          <div className="selected" onClick={this.toggleMenu}>
+            {setup.selected}
+            <div id="dropdown-icon" className="icon icon-caret-down">
+            </div>
+          </div>
+          <ul className={"dropdown-select " + show}>
+            {this.selectOptions()}
+          </ul>
+        </div>
+      );
+    }
+  });
 
   return {
     ConfirmButton: ConfirmButton,
@@ -830,7 +877,8 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
     LoadLines: LoadLines,
     MenuDropDown: MenuDropDown,
     ToggleState: ToggleState,
-    SimpleDoc: SimpleDoc
+    SimpleDoc: SimpleDoc,
+    SmallDropdown: SmallDropdown
   };
 
 });
