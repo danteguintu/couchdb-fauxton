@@ -33,7 +33,8 @@ define([
         this._showView = 'table';
         this._theFile = { size: 0 };
         this._config = this.getDefaultConfig();
-
+        this._completeFn = this._config.complete;
+        this._errorFn = this._config.error;
       } // else keeps store as it was when you left
     },
 
@@ -124,6 +125,9 @@ define([
     },
 
     papaparse: function () {
+      //for some reason this._config.complete gets overwritten on setconfig
+      this._config.complete = this._completeFn;
+      this._config.error = this._errorFn;
       Papa.parse(this._theFile, this._config);
     },
 
@@ -137,6 +141,7 @@ define([
 
       this.dataLoaded();
       this.triggerChange();
+      console.log("triggerChange");
     },
 
     clearData: function () {
@@ -162,6 +167,7 @@ define([
         worker: true, //so the page doesn't lock up
         comments: false,
         complete: function (results) {
+          console.log("completer");
           this.loadingComplete(results);
         }.bind(this),
         error: function () {
@@ -199,6 +205,7 @@ define([
         break;
 
         case ActionTypes.DATA_IMPORTER_SET_PARSE_CONFIG:
+          console.log("x");
           this.setParseConfig(action.key, action.value);
           this.clearData();
           this.papaparse(this._theFile);
