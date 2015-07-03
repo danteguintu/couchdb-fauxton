@@ -130,12 +130,17 @@ define([
     loadingComplete: function (results) {
       this.loadMeta(results.meta);
       this.loadData(results.data);
+
       if (this.isThisABigFile()) {
         this.calcSmallPreviewOfData();
       }
 
       this.dataLoaded();
       this.triggerChange();
+    },
+
+    clearData: function () {
+      this._theData = [];
     },
 
     setParseConfig: function (key, value) {
@@ -185,7 +190,6 @@ define([
         break;
 
         case ActionTypes.DATA_IMPORTER_LOAD_FILE:
-          console.log(action.file);
           this.loadFile(action.file);
           this.papaparse(action.file);
         break;
@@ -197,8 +201,8 @@ define([
 
         case ActionTypes.DATA_IMPORTER_SET_PARSE_CONFIG:
           this.setParseConfig(action.key, action.value);
+          this.clearData();
           this.papaparse(this._theFile);
-          this.triggerChange();
         break;
 
         default:

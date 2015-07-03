@@ -31,7 +31,8 @@ define([
         data: dataImporterStore.getTheData(),
         meta: dataImporterStore.getTheMetadata(),
         getPreviewView: dataImporterStore.getPreviewView(),
-        getSmallPreviewOfData: dataImporterStore.getSmallPreviewOfData()
+        getSmallPreviewOfData: dataImporterStore.getSmallPreviewOfData(),
+        getHeaderConfig: dataImporterStore.getConfigSetting('header')
       };
     },
 
@@ -61,7 +62,8 @@ define([
             isBigFile={this.state.isBigFile} 
             meta={this.state.meta}
             getPreviewView={this.state.getPreviewView}
-            getSmallPreviewOfData={this.state.getSmallPreviewOfData}/>
+            getSmallPreviewOfData={this.state.getSmallPreviewOfData}
+            getHeaderConfig= {this.state.getHeaderConfig} />
         );
       } else {
         return <DataImporterDropZone isLoading={this.state.isDataCurrentlyLoading} />;
@@ -256,13 +258,15 @@ define([
               isBigFile={this.props.isBigFile} 
               meta={this.props.meta}
               getPreviewView={this.props.getPreviewView}
-              getSmallPreviewOfData={this.props.getSmallPreviewOfData} />
+              getSmallPreviewOfData={this.props.getSmallPreviewOfData}
+              getHeaderConfig={this.props.getHeaderConfig} />
             <JSONView 
               data={this.props.data} 
               isBigFile={this.props.isBigFile} 
               meta={this.props.meta}
               getPreviewView={this.props.getPreviewView}
-              getSmallPreviewOfData={this.props.getSmallPreviewOfData} />
+              getSmallPreviewOfData={this.props.getSmallPreviewOfData}
+              getHeaderConfig={this.props.getHeaderConfig} />
           </div>
           <Footer />
         </div>
@@ -297,20 +301,6 @@ define([
       };
 
       return <Components.ToggleState toggleConfig={config} />;
-    },
-
-    one_doc_per_row: function () {
-      var config = {
-        title: 'One Document Per',
-        leftLabel : 'Row',
-        rightLabel : 'File',
-        defaultLeft: true,
-        leftClick: function () {  Actions.setParseConfig('newline', true); },
-        rightClick: function () { Actions.setParseConfig('newline', false); },
-        enclosingID: 'document-type-toggle-id'
-      };
-      return <Components.ToggleState toggleConfig={config} />;
-
     },
 
     numbers_format: function () {
@@ -350,7 +340,6 @@ define([
           <div className="options-row">
             {this.previewToggle()}
             {this.header()}
-            {this.one_doc_per_row()}
             {this.numbers_format()}
             {this.delimiter()}
           </div>
@@ -360,9 +349,6 @@ define([
   });
 
   var TableView = React.createClass({
-
-
-
     eachRow: function () {
       var data = this.props.data;
 
@@ -384,7 +370,7 @@ define([
     },
 
     header: function () {
-      if (dataImporterStore.getConfigSetting('header')) {
+      if (this.props.getHeaderConfig) {
         var header = this.props.meta.fields;
         return (
           header.map(function (field, i) {
@@ -392,7 +378,12 @@ define([
           })
         );
       } else {
-        return null;
+        var header = this.props.data;
+        return (
+          header.map(function (field, i) {
+           return <th key={i} title={i}>{i}</th>;
+          })
+        );
       }
     },
 
@@ -414,6 +405,16 @@ define([
   });
 
   var JSONView = React.createClass({
+    objectify: function (array) {
+      var object = {};
+
+      _.map(array, function (val, i) {
+        object[i] = val;
+      });
+
+      return object;
+    },
+
     rows: function () {
       var data = this.props.data;
 
@@ -423,6 +424,9 @@ define([
 
       return (
         data.map(function (dataObj, i) {
+          var dataObj = this.props.getHeaderConfig ? dataObj :
+            this.objectify(dataObj);
+
           return (
             <Components.SimpleDoc 
               id={i} 
