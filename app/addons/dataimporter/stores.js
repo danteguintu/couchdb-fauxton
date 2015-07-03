@@ -17,7 +17,7 @@ define([
   'assets/js/libs/papaparse.min'
 ], function (app, FauxtonAPI, ActionTypes, Papa) {
 
-  // Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js';
+  Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js';
 
   var DataImporterStore = FauxtonAPI.Store.extend({
 
@@ -153,16 +153,15 @@ define([
 
     getDefaultConfig: function () {
       return {
-        delimiter : "",  // auto-detect
-        newline: "",  // auto-detect
+        delimiter : '',  // auto-detect
+        newline: '',  // auto-detect
         header: true,
         dynamicTyping: false,
         preview: 0,
-        encoding: "",
-        worker: false, //so the page doesn't lock up
+        encoding: '',
+        worker: true, //so the page doesn't lock up
         comments: false,
         complete: function (results) {
-          console.log("complete");
           this.loadingComplete(results);
         }.bind(this),
         error: function () {
@@ -172,7 +171,7 @@ define([
         download: false,
         skipEmptyLines: false,
         chunk: undefined,
-        fastMode: true,
+        fastMode: false,
         beforeFirstChunk: undefined,
       };
     },

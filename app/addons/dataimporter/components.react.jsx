@@ -327,11 +327,42 @@ define([
         id: 'data-importer-delimiter',
         selected: 'Automatic',
         selectOptions: [
-          { name: 'Automatic', onClick: function () {  console.log("a"); }  },
-          { name: 'Comma', onClick: function () {  console.log("b"); }  },
-          { name: 'Tab', onClick: function () {  console.log("c"); }  },
-          { name: 'Semicolon', onClick: function () {  console.log("d"); }  },
-          { name: 'Hyphen', onClick: function () {  console.log("e"); }  },
+          {
+            name: 'Automatic',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', '');
+            }
+          },
+          {
+            name: 'Comma',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', ',');
+            }
+          },
+          {
+            name: 'Tab',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', '\t');
+            }
+          },
+          {
+            name: 'Semicolon',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', ';');
+            }
+          },
+          {
+            name: 'Colon',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', ':');
+            }
+          },
+          {
+            name: 'Hyphen',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', '-');
+            }
+          },
         ]
       };
       return <Components.SmallDropdown dropdownSetup={setup}/>;
