@@ -327,8 +327,11 @@ define([
         id: 'data-importer-delimiter',
         selected: 'Automatic',
         selectOptions: [
-          { name: "a", onClick: function () {  console.log("a"); }  },
-          { name: "b", onClick: function () {  console.log("b"); }  },
+          { name: 'Automatic', onClick: function () {  console.log("a"); }  },
+          { name: 'Comma', onClick: function () {  console.log("b"); }  },
+          { name: 'Tab', onClick: function () {  console.log("c"); }  },
+          { name: 'Semicolon', onClick: function () {  console.log("d"); }  },
+          { name: 'Hyphen', onClick: function () {  console.log("e"); }  },
         ]
       };
       return <Components.SmallDropdown dropdownSetup={setup}/>;
