@@ -320,7 +320,9 @@ define([
               <tr>{header}</tr>
               {data}
             </table>
-            <Components.SimpleDoc />
+            <JSONView />
+            
+            
           </div>
           <div className="footer">
             <span>Database Import</span>
@@ -332,9 +334,47 @@ define([
     }
   });
 
-  var OptionsRow = React.createClass({
+  var JSONView = React.createClass({
+    getInitialState: function () {
+      return {
+        data: dataImporterStore.getTheData(),
+        meta: dataImporterStore.getTheMetadata(),
+        isBigFile: dataImporterStore.isThisABigFile(),
+        rowShown: dataImporterStore.getRowsShown(),
+        rowsTotal: dataImporterStore.getTotalRows()
+      };
+    },
 
-     previewToggle: function () {
+    rows: function () {
+      var data = this.state.data;
+
+      if (this.state.isBigFile) {
+        data = dataImporterStore.getSmallPreviewOfData();
+      }
+
+      return (
+        data.map(function (dataObj, i) {
+          return (
+            <Components.SimpleDoc 
+              id={i} 
+              content={JSON.stringify(dataObj, null, ' ')}
+              key={i} />
+          );
+        }.bind(this))
+      );
+    },
+
+    render: function () {
+      return (
+        <div id="doc-list" className="json-view">
+          {this.rows()}
+        </div>
+      );
+    }
+  });
+
+  var OptionsRow = React.createClass({
+    previewToggle: function () {
       var config = {
         title: 'Preview View',
         leftLabel : 'Table',
@@ -351,7 +391,6 @@ define([
 
       return <Components.ToggleState toggleConfig={config} />;
     },
-
 
     header: function () {
       var config = {

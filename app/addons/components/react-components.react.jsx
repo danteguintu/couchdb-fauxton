@@ -655,32 +655,28 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
   });
 
   var SimpleDoc = React.createClass({
-    content: function () {
-      return "{cat: dog}";
-    },
+    //must be enclosed in tag with id = "doc-list"
     render: function () {
       return (
-        <div id="doc-list">
-          <div className="doc-row">
-            <div className="doc-item">
-              <header>
-                <span className="header-keylabel">
-                  hello
-                </span>
-                <span className="header-doc-id">
-                  there
-                </span>
-              </header>
-                <div className="doc-data">
-                  <pre className="prettyprint">{this.content()}</pre>
-                </div>
-            </div>
-            <div className="clearfix"></div>
+        <div className="doc-row">
+          <div className="doc-item">
+            <header>
+              <span className="header-keylabel">
+                _id
+              </span>
+              <span className="header-doc-id">
+                {this.props.id}
+              </span>
+            </header>
+              <div className="doc-data">
+                <pre className="prettyprint">{this.props.content}</pre>
+              </div>
           </div>
+          <div className="clearfix"></div>
         </div>
       );
     }
-  })
+  });
 
   var LoadLines = React.createClass({
     render: function () {
