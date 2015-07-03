@@ -13,8 +13,12 @@
 define([
   'app',
   'api',
-  'addons/dataimporter/actiontypes'
-], function (app, FauxtonAPI, ActionTypes) {
+  'addons/dataimporter/actiontypes',
+  'assets/js/libs/papaparse.min'
+], function (app, FauxtonAPI, ActionTypes, Papa) {
+
+  //Papa.SCRIPT_PATH = '../../assets/js/libs/papaparse.min.js';
+  //this is important if we want to use worker threads
 
   var DataImporterStore = FauxtonAPI.Store.extend({
 
@@ -109,6 +113,44 @@ define([
       return this._theData;
     },
 
+    papaparse: function (file) {
+
+      var results = Papa.parse(file, {
+        delimiter : "",  // auto-detect
+        newline: "",  // auto-detect
+        header: true,
+        dynamicTyping: false,
+        preview: 0,
+        encoding: "",
+        worker: false, //so the page doesn't lock up
+        comments: false,
+        complete: function (results) {
+          this.loadingComplete(results, file);
+        }.bind(this),
+        error: function () {
+          console.log("There was an error while parsing the file.");
+          this.errorInDataLoading();
+        }.bind(this),
+        download: false,
+        skipEmptyLines: false,
+        chunk: undefined,
+        fastMode: true,
+        beforeFirstChunk: undefined,
+      });
+    },
+
+    loadingComplete: function (results, file) {
+      this.loadFile(file);
+      this.loadMeta(results.meta);
+      this.loadData(results.data);
+      if (this.isThisABigFile()) {
+        this.calcSmallPreviewOfData();
+      }
+
+      this.dataLoaded();
+      this.triggerChange();
+    },
+
     dispatch: function (action) {
       switch (action.type) {
         case ActionTypes.DATA_IMPORTER_INIT:
@@ -121,19 +163,13 @@ define([
           this.triggerChange();
         break;
 
-        case ActionTypes.DATA_IMPORTER_DATA_LOAD_COMPLETE:
-          this.dataLoaded();
-          this.triggerChange();
-        break;
-
-        case ActionTypes.DATA_IMPORTER_ERROR_IN_DATA_LOAD:
-          this.errorInDataLoading();
-          this.triggerChange();
-        break;
-
         case ActionTypes.DATA_IMPORTER_CALC_SMALL_PREVIEW_OF_DATA:
           this.calcSmallPreviewOfData();
           this.triggerChange();
+        break;
+
+        case ActionTypes.DATA_IMPORTER_PARSE_DATA:
+          this.papaparse(action.file);
         break;
 
         default:

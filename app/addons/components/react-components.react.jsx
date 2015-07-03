@@ -786,7 +786,7 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
 
       return (
         <div id={enclosingID} className="toggle-states">
-          <div className="toggleTitle noselect">{title}</div>
+          <div className="toggle-title noselect">{title}</div>
           <div className="toggles">
             <input type="radio" 
               id = {"toggle-state-left-id-" + enclosingID}
