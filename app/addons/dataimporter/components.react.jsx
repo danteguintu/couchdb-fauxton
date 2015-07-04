@@ -32,7 +32,8 @@ define([
         meta: dataImporterStore.getTheMetadata(),
         getPreviewView: dataImporterStore.getPreviewView(),
         getSmallPreviewOfData: dataImporterStore.getSmallPreviewOfData(),
-        getHeaderConfig: dataImporterStore.getConfigSetting('header')
+        getHeaderConfig: dataImporterStore.getConfigSetting('header'),
+        getDelimiterChosen: dataImporterStore.getConfigSetting('delimiter')
       };
     },
 
@@ -63,7 +64,8 @@ define([
             meta={this.state.meta}
             getPreviewView={this.state.getPreviewView}
             getSmallPreviewOfData={this.state.getSmallPreviewOfData}
-            getHeaderConfig= {this.state.getHeaderConfig} />
+            getHeaderConfig= {this.state.getHeaderConfig}
+            getDelimiterChosen={this.state.getDelimiterChosen} />
         );
       } else {
         return <DataImporterDropZone isLoading={this.state.isDataCurrentlyLoading} />;
@@ -251,7 +253,7 @@ define([
             {startOverButton}
             {bigFileInfoMessage}
           </div>
-          <OptionsRow />
+          <OptionsRow getDelimiterChosen={this.props.getDelimiterChosen}/>
           <div className="preview-data-space">
             <TableView 
               data={this.props.data} 
@@ -322,10 +324,15 @@ define([
     },
 
     delimiter: function () {
+
+      var selected = this.props.getDelimiterChosen;
+      selected = selected === '' ? 'Automatic' : selected;
+      selected = selected === '\t' ? 'Tab' : selected;
+
       var setup = {
         title: 'Delimiter',
         id: 'data-importer-delimiter',
-        selected: 'Automatic',
+        selected: selected,
         selectOptions: [
           {
             name: 'Automatic',

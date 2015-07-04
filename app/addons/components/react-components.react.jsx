@@ -856,7 +856,9 @@ function (app, FauxtonAPI, React, Components, ace, beautifyHelper) {
             <div id="dropdown-icon" className="icon icon-caret-down">
             </div>
           </div>
-          <ul onClick={this.toggleMenu} className={"dropdown-select " + show}>
+          <ul 
+            onClick={this.toggleMenu} 
+            className={"dropdown-select " + show}>
             {this.selectOptions()}
           </ul>
         </div>

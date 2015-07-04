@@ -77,7 +77,6 @@ define([
     },
 
     loadFile: function (file) {
-      console.log(file);
       this._theFile = file;
     },
 
@@ -141,7 +140,6 @@ define([
 
       this.dataLoaded();
       this.triggerChange();
-      console.log("triggerChange");
     },
 
     clearData: function () {
@@ -167,7 +165,6 @@ define([
         worker: true, //so the page doesn't lock up
         comments: false,
         complete: function (results) {
-          console.log("completer");
           this.loadingComplete(results);
         }.bind(this),
         error: function () {
@@ -205,7 +202,6 @@ define([
         break;
 
         case ActionTypes.DATA_IMPORTER_SET_PARSE_CONFIG:
-          console.log("x");
           this.setParseConfig(action.key, action.value);
           this.clearData();
           this.papaparse(this._theFile);
