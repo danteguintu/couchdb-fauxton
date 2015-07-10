@@ -437,8 +437,10 @@ define([
       if (this.props.getPreviewView === 'table') {
         return (
           <table className="data-import-table">
-            <tr>{header}</tr>
-            {data}
+            <tbody>
+              <tr>{header}</tr>
+              {data}
+            </tbody>
           </table>
         );
       } else {
