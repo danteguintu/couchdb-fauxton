@@ -511,9 +511,52 @@ define([
     },
 
     chooseDatabaseFromDropdown : function () {
-      return (
-        <div>dropdown</div>
-      );
+      var selected = 'Tab';
+
+      var setup = {
+        title: 'Delimiter',
+        id: 'data-importer-choose-db',
+        selected: selected,
+        selectOptions: [
+          {
+            name: 'Automatic',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', '');
+            }
+          },
+          {
+            name: 'Comma',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', ',');
+            }
+          },
+          {
+            name: 'Tab',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', '\t');
+            }
+          },
+          {
+            name: 'Semicolon',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', ';');
+            }
+          },
+          {
+            name: 'Colon',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', ':');
+            }
+          },
+          {
+            name: 'Hyphen',
+            onClick: function () {
+              Actions.setParseConfig('delimiter', '-');
+            }
+          },
+        ]
+      };
+      return <Components.SmallDropdown dropdownSetup={setup}/>;
     },
 
     newDatabaseName : function () {
@@ -531,9 +574,8 @@ define([
     render: function () {
       return (
         <div id="preview-page-footer-container">
-          <div className="preview-page-footer-fixed">
-            {this.newOrExistingToggle()}
-          </div>
+          {this.newOrExistingToggle()}
+          {this.chooseDatabaseFromDropdown()}
         </div>
       );
     }
