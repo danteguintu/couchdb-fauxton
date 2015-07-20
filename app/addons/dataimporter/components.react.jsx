@@ -68,7 +68,8 @@ define([
             getDelimiterChosen={this.state.getDelimiterChosen} />
         );
       } else {
-        return <DataImporterDropZone isLoading={this.state.isDataCurrentlyLoading} />;
+        return <DataImporterDropZone
+          isLoading={this.state.isDataCurrentlyLoading} />;
       }
     }
   });
@@ -214,6 +215,11 @@ define([
   });
 
   var DataImporterPreviewData = React.createClass({
+    getInitialState: function() {
+      return {
+        left: 0
+      };
+    },
     startOverButton: function () {
       return (
         <a className="start-import-over-link" 
@@ -243,17 +249,36 @@ define([
       );
     },
 
+    componentDidMount: function() {
+      document.getElementById('preview-page')
+        .addEventListener('scroll', this.handleScroll);
+    },
+
+    componentWillUnmount: function() {
+      document.getElementById('preview-page')
+        .removeEventListener('scroll', this.handleScroll);
+    },
+
+    handleScroll: function (e) {
+      this.setState({left: document.getElementById('preview-page').scrollLeft});
+    },
+
     render: function () {
+
       var startOverButton = this.startOverButton(),
-          bigFileInfoMessage = this.props.isBigFile ? this.bigFilePreviewWarning() : "";
+          bigFileInfoMessage = 
+            this.props.isBigFile ? this.bigFilePreviewWarning() : "",
+          style = {'left': this.state.left};
 
       return (
-        <div id="preview-page"> 
-          <div className="top-row">
-            {startOverButton}
-            {bigFileInfoMessage}
+        <div id="preview-page" > 
+          <div id="data-import-options" style={style}>
+            <div className="top-row">
+              {startOverButton}
+              {bigFileInfoMessage}
+            </div>
+            <OptionsRow getDelimiterChosen={this.props.getDelimiterChosen}/>
           </div>
-          <OptionsRow getDelimiterChosen={this.props.getDelimiterChosen}/>
           <div className="preview-data-space">
             <TableView 
               data={this.props.data} 
@@ -574,8 +599,8 @@ define([
     render: function () {
       return (
         <div id="preview-page-footer-container">
-          {this.newOrExistingToggle()}
-          {this.chooseDatabaseFromDropdown()}
+            {this.newOrExistingToggle()}
+            {this.chooseDatabaseFromDropdown()}
         </div>
       );
     }

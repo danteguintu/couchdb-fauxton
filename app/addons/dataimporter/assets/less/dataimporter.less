@@ -144,9 +144,13 @@
 #preview-page {
   min-height: 200px;
   min-width: 200px;
-  overflow-y: scroll;
+  overflow: auto;
   height: calc(100% ~"-" @footerHeight);
   width: 100%;
+
+  #data-import-options {
+    position: relative;
+  }
 
   .top-row {
     font-size: 13px;
@@ -201,7 +205,7 @@
   .preview-data-space {
 
     min-width: 300px;
-    overflow: auto;
+   // overflow: auto;
 
     .data-import-table {
       
@@ -232,6 +236,11 @@
     width: inherit;
     margin-left: -15px;
     height: @footerHeight; 
+    text-align: center;
+
+    > div {
+      display: inline-block;
+    }
   }
 
   #doc-list {
@@ -242,7 +251,7 @@
 
   #choose-database-to-load-data-into {
     width: 300px;
-    padding-top: 25px;
+    padding-top: 34px;
 
     .toggle-state-button {
       width: 50%;
@@ -250,9 +259,11 @@
   }
 
   #data-importer-choose-db {
+
+    padding-top: 15px;
     ul.dropdown-select.show {
       position: absolute;
-      bottom: 35px;
+      bottom: 63px;
     }
   }
 }
