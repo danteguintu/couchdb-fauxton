@@ -144,8 +144,9 @@
 #preview-page {
   min-height: 200px;
   min-width: 200px;
-  overflow: none;
-  height: 100%;
+  overflow: scroll;
+  height: calc(100% ~"-" @footerHeight);
+  width: 100%;
 
   .top-row {
     font-size: 13px;
@@ -185,7 +186,6 @@
     .options-row {
       text-align: center;
       
-      
       .small-dropdown{
         margin-right: 20px;
         margin-top: 10px;
@@ -199,8 +199,8 @@
     }
   }
   .preview-data-space {
+
     min-width: 300px;
-    margin-bottom: @footerHeight + 10px;
     overflow: auto;
 
     .data-import-table {
@@ -223,20 +223,32 @@
       }
     }
   }
-
-  .footer {
+  #preview-page-footer-container{
+    width: 100%;
     background-color: #f1f1f1;
     color: white;
-    position: fixed;
-    bottom: 0px;
-    height: @footerHeight;
-    width: 100%;
+    position: absolute;
+    bottom: 0;
+    width: inherit;
     margin-left: -15px;
+    height: @footerHeight; 
+  }
+  .preview-page-footer-fixed {
+    
   }
 
   #doc-list {
     .prettyprint{
       color: white;
+    }
+  }
+
+  #choose-database-to-load-data-into {
+    width: 300px;
+    padding-top: 25px;
+
+    .toggle-state-button {
+      width: 50%;
     }
   }
 }

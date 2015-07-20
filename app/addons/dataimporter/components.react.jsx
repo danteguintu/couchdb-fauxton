@@ -496,12 +496,44 @@ define([
   });
 
   var Footer = React.createClass({
+    newOrExistingToggle : function () {
+      var config = {
+        title: '',
+        leftLabel : 'Existing database',
+        rightLabel : 'Load in a new database',
+        defaultLeft: true,
+        leftClick: function () {  Actions.setParseConfig('header', true); },
+        rightClick: function () { Actions.setParseConfig('header', false); },
+        enclosingID: 'choose-database-to-load-data-into'
+      };
+
+      return <Components.ToggleState toggleConfig={config} />;
+    },
+
+    chooseDatabaseFromDropdown : function () {
+      return (
+        <div>dropdown</div>
+      );
+    },
+
+    newDatabaseName : function () {
+      return (
+        <div>new DB Name</div>
+      );
+    },
+
+    importButton : function () {
+      return (
+        <div>importButton</div>
+      );
+    },
+
     render: function () {
       return (
-        <div className="footer">
-          <span>Database Import</span>
-          <span>Databse Choose</span>
-          <span>Import Button</span>
+        <div id="preview-page-footer-container">
+          <div className="preview-page-footer-fixed">
+            {this.newOrExistingToggle()}
+          </div>
         </div>
       );
     }
