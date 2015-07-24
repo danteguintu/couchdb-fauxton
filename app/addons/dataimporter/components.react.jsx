@@ -215,7 +215,7 @@ define([
   });
 
   var DataImporterPreviewData = React.createClass({
-    getInitialState: function() {
+    getInitialState: function () {
       return {
         left: 0
       };
@@ -249,12 +249,12 @@ define([
       );
     },
 
-    componentDidMount: function() {
+    componentDidMount: function () {
       document.getElementById('preview-page')
         .addEventListener('scroll', this.handleScroll);
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
       document.getElementById('preview-page')
         .removeEventListener('scroll', this.handleScroll);
     },
@@ -266,7 +266,7 @@ define([
     render: function () {
 
       var startOverButton = this.startOverButton(),
-          bigFileInfoMessage = 
+          bigFileInfoMessage =
             this.props.isBigFile ? this.bigFilePreviewWarning() : "",
           style = {'left': this.state.left};
 
